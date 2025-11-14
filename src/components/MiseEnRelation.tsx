@@ -1,7 +1,6 @@
-import { Bell, Search, Send, Upload, FileText, X, Settings, Save, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Bell, Search, Send, Upload, FileText, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { getActiveProfile, getProfilePermissions, UserProfile } from '../services/profileService';
-import { getOrganizationSettings, updateEmailTemplate, uploadEmailAttachment, getEmailAttachmentUrl } from '../services/organizationSettingsService';
+import { getOrganizationSettings } from '../services/organizationSettingsService';
 
 interface Lead {
   id: string;
@@ -44,38 +43,12 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
   const [advisorPdf, setAdvisorPdf] = useState<string>('Moche Azran BNVCE.pdf');
   const [plaquettePdf, setPlaquettePdf] = useState<string>('Plaquette BNVCE.pdf');
   const [additionalPdf, setAdditionalPdf] = useState<string | null>(null);
-  const advisorFileInputRef = useRef<HTMLInputElement>(null);
   const plaquetteFileInputRef = useRef<HTMLInputElement>(null);
   const additionalFileInputRef = useRef<HTMLInputElement>(null);
-  const adminAttachmentInputRef = useRef<HTMLInputElement>(null);
-
-  const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
-  const [canEditTemplates, setCanEditTemplates] = useState(false);
-  const [showAdminPanel, setShowAdminPanel] = useState(false);
-  const [adminEmailTemplate, setAdminEmailTemplate] = useState('');
-  const [isSavingTemplate, setIsSavingTemplate] = useState(false);
-  const [isUploadingAttachment, setIsUploadingAttachment] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    loadProfile();
     loadSettings();
   }, []);
-
-  const loadProfile = async () => {
-    try {
-      const profile = await getActiveProfile();
-      setCurrentProfile(profile);
-      if (profile) {
-        const permissions = getProfilePermissions(profile.profile_type);
-        setCanEditTemplates(permissions.canEditEmailTemplates);
-      }
-    } catch (err) {
-      console.error('Error loading profile:', err);
-      setCanEditTemplates(false);
-    }
-  };
 
   const loadSettings = async () => {
     try {
@@ -83,7 +56,6 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
       if (settings) {
         if (settings.email_template_content) {
           setEmailContent(settings.email_template_content);
-          setAdminEmailTemplate(settings.email_template_content);
         }
         if (settings.email_first_attachment_url) {
           setAdvisorPdf(settings.email_first_attachment_url);
@@ -114,56 +86,6 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
     console.log('Contenu:', emailContent);
     console.log('PDFs joints:', ['Plaquette BNVCE.pdf', advisorPdf]);
     alert(`Mise en relation envoyée à ${selectedLead.first_name} ${selectedLead.last_name}`);
-  };
-
-  const handleSaveTemplate = async () => {
-    try {
-      setIsSavingTemplate(true);
-      setErrorMessage('');
-      setSuccessMessage('');
-      await updateEmailTemplate(adminEmailTemplate);
-      setEmailContent(adminEmailTemplate);
-      setSuccessMessage('Modèle d\'email enregistré avec succès');
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Erreur lors de l\'enregistrement');
-    } finally {
-      setIsSavingTemplate(false);
-    }
-  };
-
-  const handleAdminAttachmentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.type !== 'application/pdf') {
-      setErrorMessage('Seuls les fichiers PDF sont autorisés');
-      return;
-    }
-
-    try {
-      setIsUploadingAttachment(true);
-      setErrorMessage('');
-      setSuccessMessage('');
-      await uploadEmailAttachment(file);
-      setAdvisorPdf(file.name);
-      setSuccessMessage('Pièce jointe mise à jour avec succès');
-      setTimeout(() => setSuccessMessage(''), 3000);
-      await loadSettings();
-    } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Erreur lors du téléchargement');
-    } finally {
-      setIsUploadingAttachment(false);
-    }
-  };
-
-  const handleAdvisorFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      setAdvisorPdf(file.name);
-    } else {
-      alert('Veuillez sélectionner un fichier PDF');
-    }
   };
 
   const handlePlaquetteFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -209,119 +131,6 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
       </header>
 
       <div className="px-4 md:px-6 lg:px-8 py-4 md:py-6 lg:py-8">
-        {canEditTemplates && (
-          <div className="glass-card p-4 md:p-6 floating-shadow mb-6">
-            <button
-              onClick={() => setShowAdminPanel(!showAdminPanel)}
-              className="w-full flex items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-                  <Settings className="w-5 h-5 text-white" />
-                </div>
-                <div className="text-left">
-                  <h2 className="text-lg font-light text-gray-900">Paramètres Admin</h2>
-                  <p className="text-xs text-gray-500 font-light">Gérer le modèle d'email et les pièces jointes</p>
-                </div>
-              </div>
-              {showAdminPanel ? (
-                <ChevronUp className="w-5 h-5 text-gray-400" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-gray-400" />
-              )}
-            </button>
-
-            {showAdminPanel && (
-              <div className="mt-6 space-y-6 border-t border-gray-200 pt-6">
-                {successMessage && (
-                  <div className="p-3 bg-green-50 border border-green-200 rounded-2xl">
-                    <p className="text-sm text-green-700 font-light">{successMessage}</p>
-                  </div>
-                )}
-
-                {errorMessage && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-2xl">
-                    <p className="text-sm text-red-700 font-light">{errorMessage}</p>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Modèle d'email par défaut
-                  </label>
-                  <textarea
-                    value={adminEmailTemplate}
-                    onChange={(e) => setAdminEmailTemplate(e.target.value)}
-                    rows={10}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white resize-none text-xs font-light"
-                    placeholder="Entrez le contenu du modèle d'email..."
-                  />
-                  <button
-                    onClick={handleSaveTemplate}
-                    disabled={isSavingTemplate}
-                    className="mt-3 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all flex items-center gap-2 disabled:opacity-50"
-                  >
-                    {isSavingTemplate ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Enregistrement...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4" />
-                        Enregistrer le modèle
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Première pièce jointe (Moche Azran)
-                  </label>
-                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-4 border border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-white rounded-xl shadow-sm">
-                          <FileText className="w-5 h-5 text-gray-600" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{advisorPdf}</p>
-                          <p className="text-xs text-gray-500 font-light">Fichier actuel</p>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => adminAttachmentInputRef.current?.click()}
-                      disabled={isUploadingAttachment}
-                      className="w-full px-4 py-2.5 bg-white border border-gray-300 hover:border-gray-400 rounded-2xl text-sm font-light text-gray-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                    >
-                      {isUploadingAttachment ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Téléchargement...
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-4 h-4" />
-                          Remplacer le fichier PDF
-                        </>
-                      )}
-                    </button>
-                    <input
-                      ref={adminAttachmentInputRef}
-                      type="file"
-                      accept="application/pdf"
-                      onChange={handleAdminAttachmentUpload}
-                      className="hidden"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
         <div className="glass-card p-6 md:p-8 floating-shadow">
           <div className="space-y-6">
             <div>
@@ -436,22 +245,6 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">Moche Azran</p>
                       <p className="text-xs text-gray-600 mt-0.5 truncate">{advisorPdf}</p>
-                      {!canEditTemplates && (
-                        <button
-                          onClick={() => advisorFileInputRef.current?.click()}
-                          className="mt-1.5 flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                          <Upload className="w-3.5 h-3.5" />
-                          Modifier le fichier
-                        </button>
-                      )}
-                      <input
-                        ref={advisorFileInputRef}
-                        type="file"
-                        accept="application/pdf"
-                        onChange={handleAdvisorFileChange}
-                        className="hidden"
-                      />
                     </div>
                   </div>
                 </div>

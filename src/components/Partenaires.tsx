@@ -67,19 +67,11 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
   };
 
   const handleAddPartner = () => {
-    if (!canManage) {
-      setError('Seuls les Admin et Manager+ peuvent ajouter des partenaires');
-      return;
-    }
     setEditingPartner(null);
     setIsFormModalOpen(true);
   };
 
   const handleEditPartner = (partner: Partner) => {
-    if (!canManage) {
-      setError('Seuls les Admin et Manager+ peuvent modifier des partenaires');
-      return;
-    }
     if (partner.id.startsWith('default-')) {
       setError('Les partenaires par défaut ne peuvent pas être modifiés');
       return;
@@ -98,10 +90,6 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
   };
 
   const handleDeletePartner = async (partner: Partner) => {
-    if (!canManage) {
-      setError('Seuls les Admin et Manager+ peuvent supprimer des partenaires');
-      return;
-    }
     if (partner.id.startsWith('default-')) {
       setError('Les partenaires par défaut ne peuvent pas être supprimés');
       return;
