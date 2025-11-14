@@ -72,10 +72,6 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
   };
 
   const handleEditPartner = (partner: Partner) => {
-    if (partner.id.startsWith('default-')) {
-      setError('Les partenaires par défaut ne peuvent pas être modifiés');
-      return;
-    }
     setEditingPartner(partner);
     setIsFormModalOpen(true);
   };

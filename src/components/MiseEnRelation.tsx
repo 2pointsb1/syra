@@ -1,6 +1,7 @@
 import { Bell, Search, Send, Upload, FileText, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { getOrganizationSettings } from '../services/organizationSettingsService';
+import { getActiveProfile, getProfilePermissions, UserProfile } from '../services/profileService';
 
 interface Lead {
   id: string;
@@ -43,12 +44,30 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
   const [advisorPdf, setAdvisorPdf] = useState<string>('Moche Azran BNVCE.pdf');
   const [plaquettePdf, setPlaquettePdf] = useState<string>('Plaquette BNVCE.pdf');
   const [additionalPdf, setAdditionalPdf] = useState<string | null>(null);
+  const advisorFileInputRef = useRef<HTMLInputElement>(null);
   const plaquetteFileInputRef = useRef<HTMLInputElement>(null);
   const additionalFileInputRef = useRef<HTMLInputElement>(null);
+  const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
+  const [canEditTemplates, setCanEditTemplates] = useState(false);
 
   useEffect(() => {
+    loadProfile();
     loadSettings();
   }, []);
+
+  const loadProfile = async () => {
+    try {
+      const profile = await getActiveProfile();
+      setCurrentProfile(profile);
+      if (profile) {
+        const permissions = getProfilePermissions(profile.profile_type);
+        setCanEditTemplates(permissions.canEditEmailTemplates);
+      }
+    } catch (err) {
+      console.error('Error loading profile:', err);
+      setCanEditTemplates(false);
+    }
+  };
 
   const loadSettings = async () => {
     try {
@@ -86,6 +105,15 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
     console.log('Contenu:', emailContent);
     console.log('PDFs joints:', ['Plaquette BNVCE.pdf', advisorPdf]);
     alert(`Mise en relation envoyée à ${selectedLead.first_name} ${selectedLead.last_name}`);
+  };
+
+  const handleAdvisorFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      setAdvisorPdf(file.name);
+    } else {
+      alert('Veuillez sélectionner un fichier PDF');
+    }
   };
 
   const handlePlaquetteFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +230,10 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
                 value={emailContent}
                 onChange={(e) => setEmailContent(e.target.value)}
                 rows={12}
-                className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white resize-none text-xs"
+                disabled={!canEditTemplates}
+                className={`w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-xs ${
+                  canEditTemplates ? 'bg-white' : 'bg-gray-50 cursor-not-allowed'
+                }`}
               />
             </div>
 
@@ -219,20 +250,24 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">Plaquette Bienviyance</p>
                       <p className="text-xs text-gray-600 mt-0.5 truncate">{plaquettePdf}</p>
-                      <button
-                        onClick={() => plaquetteFileInputRef.current?.click()}
-                        className="mt-1.5 flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        <Upload className="w-3.5 h-3.5" />
-                        Modifier le fichier
-                      </button>
-                      <input
-                        ref={plaquetteFileInputRef}
-                        type="file"
-                        accept="application/pdf"
-                        onChange={handlePlaquetteFileChange}
-                        className="hidden"
-                      />
+                      {canEditTemplates && (
+                        <>
+                          <button
+                            onClick={() => plaquetteFileInputRef.current?.click()}
+                            className="mt-1.5 flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            <Upload className="w-3.5 h-3.5" />
+                            Modifier le fichier
+                          </button>
+                          <input
+                            ref={plaquetteFileInputRef}
+                            type="file"
+                            accept="application/pdf"
+                            onChange={handlePlaquetteFileChange}
+                            className="hidden"
+                          />
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -245,6 +280,20 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">Moche Azran</p>
                       <p className="text-xs text-gray-600 mt-0.5 truncate">{advisorPdf}</p>
+                      <button
+                        onClick={() => advisorFileInputRef.current?.click()}
+                        className="mt-1.5 flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        Modifier le fichier
+                      </button>
+                      <input
+                        ref={advisorFileInputRef}
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleAdvisorFileChange}
+                        className="hidden"
+                      />
                     </div>
                   </div>
                 </div>
