@@ -23,6 +23,7 @@ export interface ProfilePermissions {
   canManagePartners: boolean;
   canEditEmailTemplates: boolean;
   canManageOrganizationSettings: boolean;
+  canEditAdvisorPdf: boolean;
 }
 
 export async function getAllProfiles(): Promise<UserProfile[]> {
@@ -73,6 +74,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canManagePartners: true,
         canEditEmailTemplates: true,
         canManageOrganizationSettings: true,
+        canEditAdvisorPdf: true,
       };
     case 'Manager+':
       return {
@@ -85,6 +87,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canManagePartners: true,
         canEditEmailTemplates: true,
         canManageOrganizationSettings: true,
+        canEditAdvisorPdf: true,
       };
     case 'Manager':
       return {
@@ -97,6 +100,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canManagePartners: false,
         canEditEmailTemplates: false,
         canManageOrganizationSettings: false,
+        canEditAdvisorPdf: false,
       };
     case 'Conseiller':
       return {
@@ -109,6 +113,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canManagePartners: false,
         canEditEmailTemplates: false,
         canManageOrganizationSettings: false,
+        canEditAdvisorPdf: false,
       };
     default:
       return {
@@ -121,6 +126,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canManagePartners: false,
         canEditEmailTemplates: false,
         canManageOrganizationSettings: false,
+        canEditAdvisorPdf: false,
       };
   }
 }

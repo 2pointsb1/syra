@@ -190,7 +190,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
               />
             </div>
             {showSearchResults && searchResults.length > 0 && (
-              <div className="absolute z-50 w-full mt-2 glass-card floating-shadow max-h-60 overflow-y-auto">
+              <div className="absolute z-[200] w-full mt-2 glass-card floating-shadow max-h-60 overflow-y-auto">
                 {searchResults.map((lead) => (
                   <button
                     key={lead.id}
@@ -268,7 +268,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
             </div>
 
             <div className="flex items-center justify-center">
-              <div className="bg-gradient-to-br from-blue-700 to-blue-900 rounded-3xl p-8 shadow-xl text-center min-w-[280px]">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-8 shadow-xl text-center min-w-[280px]">
                 <div className="text-5xl font-light text-white mb-3">
                   {formatCurrency(taxCeiling)}
                 </div>
@@ -303,7 +303,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
                     cy="100"
                     r="90"
                     fill="none"
-                    stroke="#1e3a8a"
+                    stroke="#3b82f6"
                     strokeWidth="20"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
@@ -339,7 +339,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-sm bg-blue-900"></div>
+                    <div className="w-4 h-4 rounded-sm bg-blue-500"></div>
                     <span className="text-sm font-light text-gray-700">Capital généré :</span>
                   </div>
                   <span className="text-sm font-medium text-gray-900">{formatCurrency(generatedCapital)}</span>
@@ -437,7 +437,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
                   onChange={(e) => setNumberOfChildren(parseInt(e.target.value))}
                   className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer slider-thumb"
                   style={{
-                    background: `linear-gradient(to right, #1e40af 0%, #1e40af ${(numberOfChildren / 5) * 100}%, #e5e7eb ${(numberOfChildren / 5) * 100}%, #e5e7eb 100%)`
+                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(numberOfChildren / 5) * 100}%, #e5e7eb ${(numberOfChildren / 5) * 100}%, #e5e7eb 100%)`
                   }}
                 />
                 <div className="mt-2 text-center bg-white border border-gray-200 rounded-lg py-2 px-4 inline-block">
@@ -455,7 +455,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
                   onChange={(e) => setAge(parseInt(e.target.value))}
                   className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer slider-thumb"
                   style={{
-                    background: `linear-gradient(to right, #1e40af 0%, #1e40af ${((age - 18) / (67 - 18)) * 100}%, #e5e7eb ${((age - 18) / (67 - 18)) * 100}%, #e5e7eb 100%)`
+                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((age - 18) / (67 - 18)) * 100}%, #e5e7eb ${((age - 18) / (67 - 18)) * 100}%, #e5e7eb 100%)`
                   }}
                 />
                 <div className="mt-2 text-center bg-white border border-gray-200 rounded-lg py-2 px-4 inline-block">
@@ -483,7 +483,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
                       onClick={() => setTaxRate(rate)}
                       className={`flex-1 px-3 py-2 rounded-full text-xs font-light transition-all ${
                         taxRate === rate
-                          ? 'bg-gradient-to-br from-blue-700 to-blue-900 text-white shadow-md'
+                          ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md'
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
@@ -512,10 +512,10 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
           <div className="flex justify-center">
             <button
               onClick={handleSendEmail}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105 flex items-center gap-2"
+              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105 flex items-center gap-2"
             >
               <Send className="w-4 h-4" />
-              Envoyer Par Mail
+              Envoyer la simulation
             </button>
           </div>
         </div>
@@ -526,7 +526,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
           appearance: none;
           width: 20px;
           height: 20px;
-          background: #1e40af;
+          background: #3b82f6;
           cursor: pointer;
           border-radius: 50%;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -535,7 +535,7 @@ export default function SimulationPER({ onNotificationClick, notificationCount }
         .slider-thumb::-moz-range-thumb {
           width: 20px;
           height: 20px;
-          background: #1e40af;
+          background: #3b82f6;
           cursor: pointer;
           border-radius: 50%;
           border: none;

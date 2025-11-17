@@ -49,6 +49,7 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
   const additionalFileInputRef = useRef<HTMLInputElement>(null);
   const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
   const [canEditTemplates, setCanEditTemplates] = useState(false);
+  const [canEditAdvisorPdf, setCanEditAdvisorPdf] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -62,10 +63,12 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
       if (profile) {
         const permissions = getProfilePermissions(profile.profile_type);
         setCanEditTemplates(permissions.canEditEmailTemplates);
+        setCanEditAdvisorPdf(permissions.canEditAdvisorPdf);
       }
     } catch (err) {
       console.error('Error loading profile:', err);
       setCanEditTemplates(false);
+      setCanEditAdvisorPdf(false);
     }
   };
 
@@ -280,20 +283,24 @@ export default function MiseEnRelation({ onNotificationClick, notificationCount 
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">Moche Azran</p>
                       <p className="text-xs text-gray-600 mt-0.5 truncate">{advisorPdf}</p>
-                      <button
-                        onClick={() => advisorFileInputRef.current?.click()}
-                        className="mt-1.5 flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        <Upload className="w-3.5 h-3.5" />
-                        Modifier le fichier
-                      </button>
-                      <input
-                        ref={advisorFileInputRef}
-                        type="file"
-                        accept="application/pdf"
-                        onChange={handleAdvisorFileChange}
-                        className="hidden"
-                      />
+                      {canEditAdvisorPdf && (
+                        <>
+                          <button
+                            onClick={() => advisorFileInputRef.current?.click()}
+                            className="mt-1.5 flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            <Upload className="w-3.5 h-3.5" />
+                            Modifier le fichier
+                          </button>
+                          <input
+                            ref={advisorFileInputRef}
+                            type="file"
+                            accept="application/pdf"
+                            onChange={handleAdvisorFileChange}
+                            className="hidden"
+                          />
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
