@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { X, Upload, FileText, Check, AlertCircle } from 'lucide-react';
-import { DocumentCategory } from '../types';
+import { DocumentCategory, UploadCategory } from '../types';
 import { uploadDocument } from '../services/libraryService';
 
 interface UploadDocumentModalProps {
   userId: string;
   organizationId: string;
-  initialCategory: DocumentCategory;
+  uploadCategory: UploadCategory;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -14,10 +14,16 @@ interface UploadDocumentModalProps {
 export default function UploadDocumentModal({
   userId,
   organizationId,
-  initialCategory,
+  uploadCategory,
   onClose,
   onSuccess,
 }: UploadDocumentModalProps) {
+
+  const mapUploadToStorageCategory = (upload: UploadCategory): DocumentCategory => {
+    if (upload === 'PER') return 'Contrats';
+    if (upload === 'Assurance Vie') return 'Prévoyance';
+    return 'Prévoyance';
+  };
   const [title, setTitle] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -98,7 +104,8 @@ export default function UploadDocumentModal({
     }, 200);
 
     try {
-      await uploadDocument(file, title, initialCategory, userId, organizationId);
+      const storageCategory = mapUploadToStorageCategory(uploadCategory);
+      await uploadDocument(file, title, storageCategory, userId, organizationId);
       clearInterval(progressInterval);
       setProgress(100);
       setSuccess(true);
@@ -139,8 +146,11 @@ export default function UploadDocumentModal({
               Catégorie
             </label>
             <div className="px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-2xl text-sm text-blue-700 font-light">
-              {initialCategory}
+              {uploadCategory}
             </div>
+            <p className="text-xs text-gray-500 mt-1 font-light">
+              Sera classé dans : {mapUploadToStorageCategory(uploadCategory)}
+            </p>
           </div>
 
           <div>

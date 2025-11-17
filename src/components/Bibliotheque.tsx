@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bell, Search, FileText, Eye, Download, Trash2, Plus, FolderOpen } from 'lucide-react';
-import { LibraryDocument, DocumentCategory } from '../types';
+import { LibraryDocument, DocumentCategory, UploadCategory } from '../types';
 import { getAllDocuments, searchDocuments, deleteDocument, getDocumentDownloadUrl, formatFileSize } from '../services/libraryService';
 import { getActiveProfile, getProfilePermissions } from '../services/profileService';
 import UploadDocumentModal from './UploadDocumentModal';
@@ -12,15 +12,17 @@ interface BibliothequeProps {
 }
 
 export default function Bibliotheque({ onNotificationClick, notificationCount, initialCategory }: BibliothequeProps) {
-  const [activeTab, setActiveTab] = useState<DocumentCategory>(initialCategory || 'PER');
+  const [activeTab, setActiveTab] = useState<DocumentCategory>(initialCategory || 'Contrats');
   const [documents, setDocuments] = useState<LibraryDocument[]>([]);
   const [filteredDocuments, setFilteredDocuments] = useState<LibraryDocument[]>([]);
+  const [allDocuments, setAllDocuments] = useState<LibraryDocument[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [canUpload, setCanUpload] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [uploadCategory, setUploadCategory] = useState<UploadCategory>('PER');
 
   useEffect(() => {
     checkPermissionsAndLoad();
@@ -57,7 +59,9 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
   const loadDocuments = async () => {
     try {
       setLoading(true);
-      const docs = await getAllDocuments(activeTab);
+      const allDocs = await getAllDocuments();
+      setAllDocuments(allDocs);
+      const docs = allDocs.filter(d => d.category === activeTab);
       setDocuments(docs);
       setFilteredDocuments(docs);
     } catch (error) {
@@ -108,8 +112,9 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
     setShowUploadModal(false);
   };
 
-  const perCount = documents.filter(d => d.category === 'PER').length;
-  const assuranceVieCount = documents.filter(d => d.category === 'Assurance Vie').length;
+  const contratsCount = allDocuments.filter(d => d.category === 'Contrats').length;
+  const bienviyanceCount = allDocuments.filter(d => d.category === 'Bienviyance').length;
+  const prevoyanceCount = allDocuments.filter(d => d.category === 'Prévoyance').length;
 
   return (
     <div className="flex-1 overflow-auto">
@@ -117,7 +122,7 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
         <div>
           <h1 className="text-xl md:text-2xl font-light text-gray-900">Bibliothèque</h1>
           <p className="text-xs md:text-sm text-gray-500 font-light mt-1 hidden sm:block">
-            Gérez vos documents PER et Assurance Vie
+            Gérez vos documents Contrats, Bienviyance et Prévoyance
           </p>
         </div>
         <button
@@ -147,35 +152,58 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveTab('PER')}
-                className={`px-4 py-2 text-sm font-light rounded-full transition-all ${
-                  activeTab === 'PER'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                    : 'bg-white/80 text-gray-600 hover:bg-white'
-                }`}
-              >
-                PER ({perCount})
-              </button>
-              <button
-                onClick={() => setActiveTab('Assurance Vie')}
-                className={`px-4 py-2 text-sm font-light rounded-full transition-all ${
-                  activeTab === 'Assurance Vie'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                    : 'bg-white/80 text-gray-600 hover:bg-white'
-                }`}
-              >
-                Assurance Vie ({assuranceVieCount})
-              </button>
-              {canUpload && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setShowUploadModal(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105 flex items-center gap-2"
+                  onClick={() => setActiveTab('Contrats')}
+                  className={`px-4 py-2 text-sm font-light rounded-full transition-all ${
+                    activeTab === 'Contrats'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                      : 'bg-white/80 text-gray-600 hover:bg-white'
+                  }`}
                 >
-                  <Plus className="w-4 h-4" />
-                  <span className="hidden sm:inline">Ajouter un document</span>
+                  Contrats ({contratsCount})
                 </button>
+                <button
+                  onClick={() => setActiveTab('Bienviyance')}
+                  className={`px-4 py-2 text-sm font-light rounded-full transition-all ${
+                    activeTab === 'Bienviyance'
+                      ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md'
+                      : 'bg-white/80 text-gray-600 hover:bg-white'
+                  }`}
+                >
+                  Bienviyance ({bienviyanceCount})
+                </button>
+                <button
+                  onClick={() => setActiveTab('Prévoyance')}
+                  className={`px-4 py-2 text-sm font-light rounded-full transition-all ${
+                    activeTab === 'Prévoyance'
+                      ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md'
+                      : 'bg-white/80 text-gray-600 hover:bg-white'
+                  }`}
+                >
+                  Prévoyance ({prevoyanceCount})
+                </button>
+              </div>
+              {canUpload && (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={uploadCategory}
+                    onChange={(e) => setUploadCategory(e.target.value as UploadCategory)}
+                    className="px-3 py-2 bg-white border border-gray-200 rounded-full text-sm font-light focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                  >
+                    <option value="PER">PER</option>
+                    <option value="Assurance Vie">Assurance Vie</option>
+                    <option value="Prévoyance">Prévoyance</option>
+                  </select>
+                  <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105 flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span className="hidden sm:inline">Ajouter un document</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -286,7 +314,7 @@ export default function Bibliotheque({ onNotificationClick, notificationCount, i
         <UploadDocumentModal
           userId={currentUserId}
           organizationId="1"
-          initialCategory={activeTab}
+          uploadCategory={uploadCategory}
           onClose={() => setShowUploadModal(false)}
           onSuccess={handleUploadSuccess}
         />
