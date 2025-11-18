@@ -11,7 +11,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
-  role: 'admin' | 'manager' | 'gestion' | 'signataire' | 'teleprospecteur';
+  role: 'admin' | 'manager' | 'gestion' | 'signataire' | 'indicateur_affaires';
   advisor_brochure_url?: string;
   is_active: boolean;
   created_at: string;
@@ -165,7 +165,7 @@ export interface Memo {
   updated_at: string;
 }
 
-export type UserProfileType = 'Admin' | 'Manager' | 'Gestion' | 'Signataire' | 'Téléprospecteur' | 'Marketing';
+export type UserProfileType = 'Admin' | 'Manager' | 'Gestion' | 'Signataire' | 'Indicateur d\'affaires' | 'Marketing';
 
 export interface UserProfile {
   id: string;

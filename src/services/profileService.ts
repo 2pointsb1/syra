@@ -98,12 +98,12 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canTransferLeads: false,
         canDeleteLeads: false,
       };
-    case 'Téléprospecteur':
+    case 'Indicateur d\'affaires':
       return {
         canAccessDashboard: true,
         canAccessLeads: true,
-        canAccessClients: false,
-        canAccessAppointments: false,
+        canAccessClients: true,
+        canAccessAppointments: true,
         canAccessManagement: false,
         canAccessLibrary: true,
         canUploadLibraryDocuments: false,
@@ -118,7 +118,7 @@ export function getProfilePermissions(profileType: string): ProfilePermissions {
         canAccessDashboard: false,
         canAccessLeads: false,
         canAccessClients: false,
-        canAccessAppointments: true,
+        canAccessAppointments: false,
         canAccessManagement: false,
         canAccessLibrary: true,
         canUploadLibraryDocuments: true,
@@ -156,7 +156,7 @@ export function getProfileBadgeColor(profileType: string): string {
       return 'bg-blue-100 text-blue-700 border-blue-200';
     case 'Signataire':
       return 'bg-green-100 text-green-700 border-green-200';
-    case 'Téléprospecteur':
+    case 'Indicateur d\'affaires':
       return 'bg-gray-100 text-gray-700 border-gray-200';
     case 'Marketing':
       return 'bg-teal-100 text-teal-700 border-teal-200';

@@ -80,7 +80,7 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
   const shouldShowClients = permissions?.canAccessClients ?? true;
   const shouldShowAppointments = permissions?.canAccessAppointments ?? true;
   const shouldShowLibrary = permissions?.canAccessLibrary ?? false;
-  const isTeleprospecteur = currentProfile?.profile_type === 'Téléprospecteur';
+  const isIndicateurAffaires = currentProfile?.profile_type === 'Indicateur d\'affaires';
   const isMarketing = currentProfile?.profile_type === 'Marketing';
 
   const handleCollapseToggle = () => {
@@ -103,7 +103,7 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
     ...(shouldShowAppointments ? [{ id: 'calendrier', label: 'Agenda', icon: Calendar }] : []),
   ];
 
-  const meetingItems = shouldShowAppointments && !isTeleprospecteur ? [
+  const meetingItems = shouldShowAppointments && !isIndicateurAffaires && !isMarketing ? [
     { id: 'partenaires', label: 'Partenaires', icon: Handshake },
     { id: 'mise-en-relation', label: 'Mise en relation', icon: Send },
     { id: 'simulation-per', label: 'Simulation PER', icon: Calculator },
@@ -287,7 +287,7 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
           </div>
         </div>
 
-        {!isCollapsed && !isTeleprospecteur && <div className="border-t border-gray-200/30 my-4"></div>}
+        {!isCollapsed && !isIndicateurAffaires && !isMarketing && <div className="border-t border-gray-200/30 my-4"></div>}
 
         {meetingItems.length > 0 && (
           <>

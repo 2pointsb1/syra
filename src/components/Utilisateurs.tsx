@@ -10,7 +10,7 @@ const mockUsers: User[] = [
     email: 'e.aboukrat@bnvce.fr',
     first_name: 'Ethan',
     last_name: 'Aboukrat',
-    role: 'teleprospecteur',
+    role: 'indicateur_affaires',
     is_active: true,
     created_at: '2025-10-02',
     updated_at: '2025-10-02',
@@ -21,7 +21,7 @@ const mockUsers: User[] = [
     email: 'd.alamihamdouni@bnvce.fr',
     first_name: 'Driss',
     last_name: 'Alami hamdouni',
-    role: 'teleprospecteur',
+    role: 'indicateur_affaires',
     is_active: true,
     created_at: '2025-10-02',
     updated_at: '2025-10-02',
@@ -32,7 +32,7 @@ const mockUsers: User[] = [
     email: 'm.assouline@bnvce.fr',
     first_name: 'Maor',
     last_name: 'Assouline',
-    role: 'teleprospecteur',
+    role: 'indicateur_affaires',
     is_active: true,
     created_at: '2025-10-02',
     updated_at: '2025-10-02',
@@ -54,7 +54,7 @@ const mockUsers: User[] = [
     email: 'o.attard@bnvce.fr',
     first_name: 'Ornella',
     last_name: 'Attard',
-    role: 'teleprospecteur',
+    role: 'indicateur_affaires',
     is_active: true,
     created_at: '2025-10-02',
     updated_at: '2025-10-02',
@@ -119,7 +119,7 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
     first_name: '',
     last_name: '',
     email: '',
-    role: 'gestion' as 'gestion' | 'signataire' | 'teleprospecteur',
+    role: 'gestion' as 'gestion' | 'signataire' | 'indicateur_affaires',
     assigned_lists: [] as string[],
   });
   const [brochureFile, setBrochureFile] = useState<File | null>(null);
@@ -129,7 +129,7 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
     last_name: '',
     email: '',
     password: '',
-    role: 'gestion' as 'gestion' | 'signataire' | 'teleprospecteur',
+    role: 'gestion' as 'gestion' | 'signataire' | 'indicateur_affaires',
     is_active: true,
     assigned_lists: [] as string[],
   });
@@ -165,7 +165,7 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
       last_name: user.last_name,
       email: user.email,
       password: '',
-      role: user.role as 'gestion' | 'signataire' | 'teleprospecteur',
+      role: user.role as 'gestion' | 'signataire' | 'indicateur_affaires',
       is_active: user.is_active,
       assigned_lists: mockListAssignments[user.id] || [],
     });
@@ -332,7 +332,7 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
                         ? 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border-green-200/50'
                         : 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200/50'
                     }`}>
-                      {user.role === 'admin' ? 'Admin' : user.role === 'manager' ? 'Manager' : user.role === 'gestion' ? 'Gestion' : user.role === 'signataire' ? 'Signataire' : 'Téléprospecteur'}
+                      {user.role === 'admin' ? 'Admin' : user.role === 'manager' ? 'Manager' : user.role === 'gestion' ? 'Gestion' : user.role === 'signataire' ? 'Signataire' : 'Indicateur d\'affaires'}
                     </span>
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-light border ${
                       user.is_active
@@ -395,7 +395,7 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
                           ? 'bg-gradient-to-r from-pink-100 to-pink-50 text-pink-700 border-pink-200/50'
                           : 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200/50'
                       }`}>
-                        {user.role === 'admin' ? 'Admin' : user.role === 'manager' ? 'Manager' : user.role === 'gestion' ? 'Gestion' : user.role === 'signataire' ? 'Signataire' : 'Téléprospecteur'}
+                        {user.role === 'admin' ? 'Admin' : user.role === 'manager' ? 'Manager' : user.role === 'gestion' ? 'Gestion' : user.role === 'signataire' ? 'Signataire' : 'Indicateur d\'affaires'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -487,14 +487,14 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
                 <select
                   value={formData.role}
                   onChange={(e) => {
-                    setFormData({ ...formData, role: e.target.value as 'gestion' | 'signataire' | 'teleprospecteur' });
+                    setFormData({ ...formData, role: e.target.value as 'gestion' | 'signataire' | 'indicateur_affaires' });
                     setBrochureFile(null);
                   }}
                   className="w-full px-4 py-2 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
                 >
                   <option value="gestion">Gestion</option>
                   <option value="signataire">Signataire</option>
-                  <option value="teleprospecteur">Téléprospecteur</option>
+                  <option value="indicateur_affaires">Indicateur d'affaires</option>
                 </select>
               </div>
               {formData.role === 'signataire' && (
@@ -653,14 +653,14 @@ export default function Utilisateurs({ onNotificationClick, notificationCount }:
                 <select
                   value={editFormData.role}
                   onChange={(e) => {
-                    setEditFormData({ ...editFormData, role: e.target.value as 'gestion' | 'signataire' | 'teleprospecteur' });
+                    setEditFormData({ ...editFormData, role: e.target.value as 'gestion' | 'signataire' | 'indicateur_affaires' });
                     setEditBrochureFile(null);
                   }}
                   className="w-full px-4 py-2 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
                 >
                   <option value="gestion">Gestion</option>
                   <option value="signataire">Signataire</option>
-                  <option value="teleprospecteur">Téléprospecteur</option>
+                  <option value="indicateur_affaires">Indicateur d'affaires</option>
                 </select>
               </div>
               {editFormData.role === 'signataire' && (
