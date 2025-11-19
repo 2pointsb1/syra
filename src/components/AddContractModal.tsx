@@ -1,7 +1,9 @@
-import { X } from 'lucide-react';
+import { X, AlertCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { INSURANCE_COMPANIES, getCompanyByName, getProductByName, getAllCompanyNames, ProductConfig } from '../data/insuranceProducts';
+import { getContractCategory, shouldShowPERExistantField, shouldShowAssuranceVieExistanteField, shouldShowMutuelleReminder, shouldShowPrevoyanceRenouvellementField, shouldShowAssuranceEmprunteurReminder } from '../utils/contractCategories';
+import { createAutomaticReminder } from '../services/automaticRemindersService';
 
 interface AddContractModalProps {
   onClose: () => void;
@@ -41,6 +43,10 @@ interface ContractData {
   frais_dossier: string;
   assureurs_interroges: string[];
   propositions_comparatives: string[];
+  per_existant?: boolean;
+  assurance_vie_existante?: boolean;
+  rachat_effectue?: boolean;
+  contrat_renouvellement_remplacement?: 'nouveau' | 'renouvellement' | 'remplacement' | '';
 }
 
 const ASSUREURS = getAllCompanyNames();
@@ -70,6 +76,8 @@ export default function AddContractModal({ onClose, onSave, editContract, editIn
   const [assureursInterroges, setAssureursInterroges] = useState<string[]>(editContract?.assureurs_interroges || []);
   const [availableProducts, setAvailableProducts] = useState<ProductConfig[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductConfig | null>(null);
+  const [reminderMessage, setReminderMessage] = useState('');
+  const [showReminderSuccess, setShowReminderSuccess] = useState(false);
   const [formData, setFormData] = useState<ContractData>(editContract || {
     assureur: '',
     gamme_contrat: '',
@@ -101,6 +109,10 @@ export default function AddContractModal({ onClose, onSave, editContract, editIn
     frais_dossier: '',
     assureurs_interroges: [],
     propositions_comparatives: [],
+    per_existant: false,
+    assurance_vie_existante: false,
+    rachat_effectue: false,
+    contrat_renouvellement_remplacement: '',
   });
 
   const filteredAssureurs = ASSUREURS.filter(assureur =>
@@ -162,15 +174,44 @@ export default function AddContractModal({ onClose, onSave, editContract, editIn
     }
   }, [editContract]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (onSave) {
       const dataToSave = {
         ...formData,
         assureurs_interroges: assureursInterroges,
       };
       onSave(dataToSave);
+
+      try {
+        const result = await createAutomaticReminder(
+          {
+            produit: formData.produit,
+            per_existant: formData.per_existant,
+            assurance_vie_existante: formData.assurance_vie_existante,
+            rachat_effectue: formData.rachat_effectue,
+            contrat_renouvellement_remplacement: formData.contrat_renouvellement_remplacement,
+          },
+          'mock-user-id',
+          '1'
+        );
+
+        if (result.reminderCreated) {
+          setReminderMessage(result.message);
+          setShowReminderSuccess(true);
+          setTimeout(() => {
+            setShowReminderSuccess(false);
+            onClose();
+          }, 2000);
+        } else {
+          onClose();
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création du rappel:', error);
+        onClose();
+      }
+    } else {
+      onClose();
     }
-    onClose();
   };
 
   return createPortal(
@@ -578,6 +619,144 @@ export default function AddContractModal({ onClose, onSave, editContract, editIn
                 </div>
               </div>
 
+              {/* Section Rappels Automatiques Conditionnels */}
+              {formData.produit && shouldShowPERExistantField(formData.produit) && (
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-700">
+                  <div className="flex items-start gap-3 mb-3">
+                    <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Plan Épargne Retraite (PER)</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Configuration spécifique pour les contrats PER</p>
+                    </div>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer mt-3">
+                    <input
+                      type="checkbox"
+                      checked={formData.per_existant}
+                      onChange={(e) => setFormData({ ...formData, per_existant: e.target.checked })}
+                      className="w-4 h-4 text-blue-600 dark:text-blue-400 rounded border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-light text-gray-700 dark:text-gray-300">PER déjà existant</span>
+                  </label>
+                  {formData.per_existant && (
+                    <div className="mt-3 p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+                      <p className="text-xs text-blue-700 dark:text-blue-300 font-light">
+                        ✓ Un rappel sera automatiquement créé : "Faire demande de transfert + suspension des versements sur l'ancien PER"
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {formData.produit && shouldShowAssuranceVieExistanteField(formData.produit) && (
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-700">
+                  <div className="flex items-start gap-3 mb-3">
+                    <AlertCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Assurance Vie / Épargne</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Configuration spécifique pour l'assurance vie</p>
+                    </div>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer mt-3">
+                    <input
+                      type="checkbox"
+                      checked={formData.assurance_vie_existante}
+                      onChange={(e) => setFormData({ ...formData, assurance_vie_existante: e.target.checked })}
+                      className="w-4 h-4 text-green-600 dark:text-green-400 rounded border-gray-300 focus:ring-green-500"
+                    />
+                    <span className="text-sm font-light text-gray-700 dark:text-gray-300">Assurance vie déjà existante</span>
+                  </label>
+                  {formData.assurance_vie_existante && (
+                    <div className="mt-3 space-y-3">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.rachat_effectue}
+                          onChange={(e) => setFormData({ ...formData, rachat_effectue: e.target.checked })}
+                          className="w-4 h-4 text-green-600 dark:text-green-400 rounded border-gray-300 focus:ring-green-500"
+                        />
+                        <span className="text-sm font-light text-gray-700 dark:text-gray-300">Avez-vous effectué un rachat total ou partiel ?</span>
+                      </label>
+                      {formData.rachat_effectue && (
+                        <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
+                          <p className="text-xs text-green-700 dark:text-green-300 font-light">
+                            ✓ Un rappel sera automatiquement créé : "Suivi du rachat total ou partiel"
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {formData.produit && shouldShowMutuelleReminder(formData.produit) && (
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-2xl border border-orange-200 dark:border-orange-700">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Mutuelle Santé</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Un rappel automatique sera créé pour ce type de contrat</p>
+                      <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-xl">
+                        <p className="text-xs text-orange-700 dark:text-orange-300 font-light">
+                          ✓ Rappel automatique : "Avez-vous fait la RIA ?" (Résiliation Infra-Annuelle)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {formData.produit && shouldShowPrevoyanceRenouvellementField(formData.produit) && (
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-700">
+                  <div className="flex items-start gap-3 mb-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Prévoyance</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Configuration spécifique pour les contrats de prévoyance</p>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">
+                      Le contrat est-il en renouvellement ou en remplacement ?
+                    </label>
+                    <select
+                      value={formData.contrat_renouvellement_remplacement}
+                      onChange={(e) => setFormData({ ...formData, contrat_renouvellement_remplacement: e.target.value as 'nouveau' | 'renouvellement' | 'remplacement' | '' })}
+                      className="w-full px-4 py-2.5 bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 font-light focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="nouveau">Nouveau contrat</option>
+                      <option value="renouvellement">Renouvellement</option>
+                      <option value="remplacement">Remplacement</option>
+                    </select>
+                    {(formData.contrat_renouvellement_remplacement === 'renouvellement' || formData.contrat_renouvellement_remplacement === 'remplacement') && (
+                      <div className="mt-3 p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
+                        <p className="text-xs text-red-700 dark:text-red-300 font-light">
+                          ✓ Un rappel sera automatiquement créé : "Avez-vous effectué la RIA (résiliation ou non reconduction) ?"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {formData.produit && shouldShowAssuranceEmprunteurReminder(formData.produit) && (
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-200 dark:border-purple-700">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Assurance Emprunteur</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Un rappel automatique sera créé dans 3 semaines</p>
+                      <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
+                        <p className="text-xs text-purple-700 dark:text-purple-300 font-light">
+                          ✓ Rappel automatique (J+21) : "Appeler le client pour vérification de l'avenant bancaire"
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Section Commentaires - Moved to the end */}
               <div>
                 <h3 className="text-lg font-light text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">Commentaires</h3>
@@ -598,13 +777,22 @@ export default function AddContractModal({ onClose, onSave, editContract, editIn
           </div>
 
           {/* Footer */}
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700/30 bg-white dark:bg-gray-900 flex justify-center rounded-b-3xl flex-shrink-0">
-            <button
-              onClick={handleSave}
-              className="px-8 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm text-gray-900 dark:text-gray-100 font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105"
-            >
-              Ajouter et fermer
-            </button>
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700/30 bg-white dark:bg-gray-900 rounded-b-3xl flex-shrink-0">
+            {showReminderSuccess && (
+              <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-2xl">
+                <p className="text-sm text-green-700 dark:text-green-300 font-light text-center">
+                  ✓ {reminderMessage}
+                </p>
+              </div>
+            )}
+            <div className="flex justify-center">
+              <button
+                onClick={handleSave}
+                className="px-8 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all hover:scale-105"
+              >
+                Ajouter et fermer
+              </button>
+            </div>
           </div>
         </div>
       </div>
