@@ -417,9 +417,9 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-500 font-light mb-1">{kpi.label}</p>
                     <div className="flex items-baseline gap-2">
-                      <p className="text-xl font-light text-gray-900">{kpi.value}</p>
+                      <p className="text-xl font-light text-gray-900 dark:text-gray-100">{kpi.value}</p>
                       <span className={`text-xs font-light px-2 py-1 rounded-full ${
-                        kpi.trend.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        kpi.trend.startsWith('+') ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                       }`}>
                         {kpi.trend}
                       </span>
@@ -431,7 +431,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
           })}
 
           <div
-            className="glass-card glass-card-hover p-4 md:p-5 floating-shadow cursor-pointer bg-gradient-to-r from-red-50/80 to-red-100/40 backdrop-blur-xl border-red-200/50"
+            className="glass-card glass-card-hover p-4 md:p-5 floating-shadow cursor-pointer bg-gradient-to-r from-red-50/80 to-red-100/40 dark:from-red-950/40 dark:to-red-900/30 backdrop-blur-xl border-red-200/50 dark:border-red-800/50"
             onClick={() => setShowMemosModal(true)}
           >
             <div className="flex items-start justify-between gap-4">
@@ -439,10 +439,10 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                 <StickyNote className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-500 font-light mb-1">Mémo & Rappels</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-light mb-1">Mémo & Rappels</p>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-xl font-light text-gray-900">{memos.length}</p>
-                  <span className="text-xs font-light px-2 py-1 rounded-full bg-red-200/50 text-red-700 border border-red-300/30">
+                  <p className="text-xl font-light text-gray-900 dark:text-gray-100">{memos.length}</p>
+                  <span className="text-xs font-light px-2 py-1 rounded-full bg-red-200/50 text-red-700 dark:bg-red-900/40 dark:text-red-400 border border-red-300/30 dark:border-red-800/50">
                     {memos.length} actifs
                   </span>
                 </div>
@@ -513,23 +513,23 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                     setShowEditContractModal(true);
                   }}
                   className={`p-3 rounded-xl border cursor-pointer hover:shadow-md transition-all ${
-                  contract.error_type === 'missing_document' ? 'bg-gradient-to-r from-red-50 to-red-100/30 border-red-200/50' :
-                  contract.error_type === 'invalid_iban' ? 'bg-gradient-to-r from-amber-50 to-amber-100/30 border-amber-200/50' :
-                  contract.error_type === 'invalid_proof' ? 'bg-gradient-to-r from-orange-50 to-orange-100/30 border-orange-200/50' :
-                  'bg-gradient-to-r from-blue-50 to-blue-100/30 border-blue-200/50'
+                  contract.error_type === 'missing_document' ? 'bg-gradient-to-r from-red-50 to-red-100/30 dark:from-red-950/50 dark:to-red-900/30 border-red-200/50 dark:border-red-800/50' :
+                  contract.error_type === 'invalid_iban' ? 'bg-gradient-to-r from-amber-50 to-amber-100/30 dark:from-amber-950/50 dark:to-amber-900/30 border-amber-200/50 dark:border-amber-800/50' :
+                  contract.error_type === 'invalid_proof' ? 'bg-gradient-to-r from-orange-50 to-orange-100/30 dark:from-orange-950/50 dark:to-orange-900/30 border-orange-200/50 dark:border-orange-800/50' :
+                  'bg-gradient-to-r from-blue-50 to-blue-100/30 dark:from-blue-950/50 dark:to-blue-900/30 border-blue-200/50 dark:border-blue-800/50'
                 }`}>
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{contract.client_name}</p>
-                      <p className="text-xs text-gray-600 font-light">{contract.contract_type}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{contract.client_name}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 font-light">{contract.contract_type}</p>
                     </div>
-                    <span className="text-xs font-light text-gray-900">{contract.amount.toLocaleString('fr-FR')} €</span>
+                    <span className="text-xs font-light text-gray-900 dark:text-gray-100">{contract.amount.toLocaleString('fr-FR')} €</span>
                   </div>
                   <div className={`text-xs font-light px-2 py-1 rounded-full inline-block ${
-                    contract.error_type === 'missing_document' ? 'bg-red-200/50 text-red-700' :
-                    contract.error_type === 'invalid_iban' ? 'bg-amber-200/50 text-amber-700' :
-                    contract.error_type === 'invalid_proof' ? 'bg-orange-200/50 text-orange-700' :
-                    'bg-blue-200/50 text-blue-700'
+                    contract.error_type === 'missing_document' ? 'bg-red-200/50 text-red-700 dark:bg-red-900/50 dark:text-red-300' :
+                    contract.error_type === 'invalid_iban' ? 'bg-amber-200/50 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300' :
+                    contract.error_type === 'invalid_proof' ? 'bg-orange-200/50 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300' :
+                    'bg-blue-200/50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
                   }`}>
                     {contract.error_type === 'missing_document' ? 'Pièce manquante' :
                      contract.error_type === 'invalid_iban' ? 'IBAN invalide' :
@@ -555,32 +555,32 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
             <h3 className="text-lg font-light text-gray-900 mb-6">Statistiques des Leads</h3>
             <div className="grid grid-cols-2 gap-4">
               <div
-                className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/30 dark:from-blue-950/50 dark:to-blue-900/30 rounded-xl cursor-pointer hover:shadow-md transition-all border border-blue-100 dark:border-blue-900/50"
                 onClick={() => onNavigateToLeads?.(null)}
               >
-                <p className="text-3xl font-light text-gray-900">{totalLeads}</p>
-                <p className="text-sm text-gray-600 font-light mt-1">Total leads</p>
+                <p className="text-3xl font-light text-gray-900 dark:text-gray-100">{totalLeads}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-light mt-1">Total leads</p>
               </div>
               <div
-                className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100/30 dark:from-green-950/50 dark:to-green-900/30 rounded-xl cursor-pointer hover:shadow-md transition-all border border-green-100 dark:border-green-900/50"
                 onClick={() => onNavigateToLeads?.('NRP')}
               >
-                <p className="text-3xl font-light text-gray-900">{contactedLeads}</p>
-                <p className="text-sm text-gray-600 font-light mt-1">Contactés</p>
+                <p className="text-3xl font-light text-gray-900 dark:text-gray-100">{contactedLeads}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-light mt-1">Contactés</p>
               </div>
               <div
-                className="text-center p-4 bg-gradient-to-br from-violet-50 to-violet-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                className="text-center p-4 bg-gradient-to-br from-violet-50 to-violet-100/30 dark:from-violet-950/50 dark:to-violet-900/30 rounded-xl cursor-pointer hover:shadow-md transition-all border border-violet-100 dark:border-violet-900/50"
                 onClick={() => onNavigateToLeads?.('RDV pris')}
               >
-                <p className="text-3xl font-light text-gray-900">{convertedLeads}</p>
-                <p className="text-sm text-gray-600 font-light mt-1">Convertis</p>
+                <p className="text-3xl font-light text-gray-900 dark:text-gray-100">{convertedLeads}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-light mt-1">Convertis</p>
               </div>
               <div
-                className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100/30 rounded-xl cursor-pointer hover:shadow-md transition-all"
+                className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100/30 dark:from-amber-950/50 dark:to-amber-900/30 rounded-xl cursor-pointer hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/50"
                 onClick={() => onNavigateToLeads?.('À rappeler')}
               >
-                <p className="text-3xl font-light text-gray-900">14</p>
-                <p className="text-sm text-gray-600 font-light mt-1">À rappeler</p>
+                <p className="text-3xl font-light text-gray-900 dark:text-gray-100">14</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-light mt-1">À rappeler</p>
               </div>
             </div>
           </div>
@@ -652,10 +652,10 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
         </div>
 
         {showMemosModal && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="glass-card floating-shadow p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-light text-gray-900">Mémos & Rappels</h3>
+                <h3 className="text-xl font-light text-gray-900 dark:text-gray-100">Mémos & Rappels</h3>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowAddMemoForm(!showAddMemoForm)}
@@ -669,55 +669,55 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                       setShowMemosModal(false);
                       setShowAddMemoForm(false);
                     }}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                   >
-                    <X className="w-5 h-5 text-gray-600" />
+                    <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </button>
                 </div>
               </div>
 
               {showAddMemoForm && (
-                <div className="mb-6 p-5 glass-card floating-shadow bg-gradient-to-br from-blue-50/50 to-white/80">
-                  <h4 className="text-sm font-light text-gray-900 mb-4">Nouveau mémo</h4>
+                <div className="mb-6 p-5 glass-card floating-shadow bg-gradient-to-br from-blue-50/50 to-white/80 dark:from-blue-950/30 dark:to-gray-800/80">
+                  <h4 className="text-sm font-light text-gray-900 dark:text-gray-100 mb-4">Nouveau mémo</h4>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-light text-gray-700 mb-2">Titre du mémo *</label>
+                      <label className="block text-xs font-light text-gray-700 dark:text-gray-300 mb-2">Titre du mémo *</label>
                       <input
                         type="text"
                         value={newMemoTitle}
                         onChange={(e) => setNewMemoTitle(e.target.value)}
                         placeholder="Titre du mémo"
-                        className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
+                        className="w-full px-4 py-2.5 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-light text-gray-700 mb-2">Date *</label>
+                        <label className="block text-xs font-light text-gray-700 dark:text-gray-300 mb-2">Date *</label>
                         <input
                           type="date"
                           value={newMemoDate}
                           onChange={(e) => setNewMemoDate(e.target.value)}
-                          className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
+                          className="w-full px-4 py-2.5 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-light text-gray-700 mb-2">Heure *</label>
+                        <label className="block text-xs font-light text-gray-700 dark:text-gray-300 mb-2">Heure *</label>
                         <input
                           type="time"
                           value={newMemoTime}
                           onChange={(e) => setNewMemoTime(e.target.value)}
-                          className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
+                          className="w-full px-4 py-2.5 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light transition-all"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-light text-gray-700 mb-2">Description</label>
+                      <label className="block text-xs font-light text-gray-700 dark:text-gray-300 mb-2">Description</label>
                       <textarea
                         value={newMemoDescription}
                         onChange={(e) => setNewMemoDescription(e.target.value)}
                         placeholder="Description du mémo (optionnel)"
                         rows={3}
-                        className="w-full px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light resize-none transition-all"
+                        className="w-full px-4 py-2.5 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light resize-none transition-all"
                       />
                     </div>
                     <div className="flex gap-3 justify-end pt-2">
@@ -729,7 +729,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                           setNewMemoTime('');
                           setNewMemoDescription('');
                         }}
-                        className="px-5 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/50 text-gray-700 rounded-full text-sm font-light hover:bg-white hover:shadow-md transition-all"
+                        className="px-5 py-2.5 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 text-gray-700 dark:text-gray-300 rounded-full text-sm font-light hover:bg-white dark:hover:bg-gray-700 hover:shadow-md transition-all"
                       >
                         Annuler
                       </button>
@@ -746,11 +746,11 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
 
               {memos.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center shadow-sm">
-                    <StickyNote className="w-9 h-9 text-gray-400" />
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center shadow-sm">
+                    <StickyNote className="w-9 h-9 text-gray-400 dark:text-gray-500" />
                   </div>
-                  <p className="text-sm text-gray-600 font-light">Aucun mémo actif</p>
-                  <p className="text-xs text-gray-500 font-light mt-1">Ajoutez un mémo pour commencer</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 font-light">Aucun mémo actif</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 font-light mt-1">Ajoutez un mémo pour commencer</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -772,14 +772,14 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <p className="text-sm font-medium text-gray-900">{memo.title}</p>
+                              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{memo.title}</p>
                               {memo.description && (
-                                <p className="text-sm text-gray-600 font-light mt-1.5 leading-relaxed">{memo.description}</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 font-light mt-1.5 leading-relaxed">{memo.description}</p>
                               )}
                             </div>
                             <div className="text-right flex-shrink-0">
-                              <p className="text-xs text-gray-500 font-light">{memo.date}</p>
-                              <p className="text-xs text-gray-500 font-light mt-0.5">{memo.time}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 font-light">{memo.date}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 font-light mt-0.5">{memo.time}</p>
                             </div>
                           </div>
                         </div>
@@ -793,13 +793,13 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
         )}
 
         {showCallbackModal && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-200">
+          <div className="fixed inset-0 bg-black/60 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-light text-gray-900">Leads à rappeler</h3>
+                <h3 className="text-xl font-light text-gray-900 dark:text-gray-100">Leads à rappeler</h3>
                 <button
                   onClick={() => setShowCallbackModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                 >
                   <X className="w-5 h-5 text-gray-600" />
                 </button>
@@ -838,31 +838,31 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
         )}
 
         {showEditContractModal && selectedContract && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto border border-gray-200">
+          <div className="fixed inset-0 bg-black/60 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-xl font-light text-gray-900">Compléter le dossier</h3>
-                  <p className="text-sm text-gray-500 font-light mt-1">{selectedContract.client_name} - {selectedContract.contract_type}</p>
+                  <h3 className="text-xl font-light text-gray-900 dark:text-gray-100">Compléter le dossier</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 font-light mt-1">{selectedContract.client_name} - {selectedContract.contract_type}</p>
                 </div>
                 <button
                   onClick={() => {
                     setShowEditContractModal(false);
                     setSelectedContract(null);
                   }}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-600" />
+                  <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
 
               <div className="space-y-6">
-                <div className="p-4 rounded-xl border bg-red-50 border-red-500">
+                <div className="p-4 rounded-xl border bg-red-50 dark:bg-red-950/30 border-red-500 dark:border-red-800/50">
                   <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-5 h-5 text-red-600" />
-                    <span className="font-medium text-gray-900">Pièce manquante</span>
+                    <Clock className="w-5 h-5 text-red-600 dark:text-red-400" />
+                    <span className="font-medium text-gray-900 dark:text-gray-100">Pièce manquante</span>
                   </div>
-                  <p className="text-sm text-gray-700 font-light">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 font-light">
                     {selectedContract.error_type === 'missing_document' ? 'Documents manquants pour finaliser le dossier' :
                      selectedContract.error_type === 'invalid_iban' ? 'IBAN invalide ou incomplet' :
                      selectedContract.error_type === 'invalid_proof' ? 'Justificatif invalide ou illisible' :
@@ -871,44 +871,44 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                 </div>
 
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Nom du client</label>
+                  <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">Nom du client</label>
                   <input
                     type="text"
                     value={selectedContract.client_name}
                     readOnly
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-light"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm text-gray-900 dark:text-gray-100 font-light"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Type de contrat</label>
+                  <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">Type de contrat</label>
                   <input
                     type="text"
                     value={selectedContract.contract_type}
                     readOnly
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-light"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm text-gray-900 dark:text-gray-100 font-light"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Montant</label>
+                  <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">Montant</label>
                   <input
                     type="text"
                     value={`${selectedContract.amount.toLocaleString('fr-FR')} €`}
                     readOnly
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-light"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm text-gray-900 dark:text-gray-100 font-light"
                   />
                 </div>
 
                 {selectedContract.error_type === 'missing_document' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-3">Documents manquants</label>
+                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Documents manquants</label>
                     <div className="space-y-3">
-                      <div className="p-4 bg-gradient-to-r from-red-50 to-red-100/30 rounded-xl border border-red-200/50">
+                      <div className="p-4 bg-gradient-to-r from-red-50 to-red-100/30 dark:from-red-950/50 dark:to-red-900/30 rounded-xl border border-red-200/50 dark:border-red-800/50">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <FileText className="w-5 h-5 text-red-600" />
-                            <span className="text-sm font-medium text-gray-900">Pièce d'identité (CNI, Passeport, Permis)</span>
+                            <FileText className="w-5 h-5 text-red-600 dark:text-red-400" />
+                            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Pièce d'identité (CNI, Passeport, Permis)</span>
                           </div>
                         </div>
                         <label className="relative block">
@@ -918,18 +918,18 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                             className="hidden"
                             onChange={(e) => console.log('Fichier sélectionné:', e.target.files?.[0])}
                           />
-                          <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm font-light text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+                          <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-light text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
                             <Upload className="w-4 h-4" />
                             <span>Télécharger le document</span>
                           </div>
                         </label>
                       </div>
 
-                      <div className="p-4 bg-gradient-to-r from-amber-50 to-amber-100/30 rounded-xl border border-amber-200/50">
+                      <div className="p-4 bg-gradient-to-r from-amber-50 to-amber-100/30 dark:from-amber-950/50 dark:to-amber-900/30 rounded-xl border border-amber-200/50 dark:border-amber-800/50">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <FileText className="w-5 h-5 text-amber-600" />
-                            <span className="text-sm font-medium text-gray-900">Justificatif de domicile (moins de 3 mois)</span>
+                            <FileText className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Justificatif de domicile (moins de 3 mois)</span>
                           </div>
                         </div>
                         <label className="relative block">
@@ -939,18 +939,18 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                             className="hidden"
                             onChange={(e) => console.log('Fichier sélectionné:', e.target.files?.[0])}
                           />
-                          <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm font-light text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+                          <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-light text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
                             <Upload className="w-4 h-4" />
                             <span>Télécharger le document</span>
                           </div>
                         </label>
                       </div>
 
-                      <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100/30 rounded-xl border border-blue-200/50">
+                      <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100/30 dark:from-blue-950/50 dark:to-blue-900/30 rounded-xl border border-blue-200/50 dark:border-blue-800/50">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <FileText className="w-5 h-5 text-blue-600" />
-                            <span className="text-sm font-medium text-gray-900">RIB (Relevé d'Identité Bancaire)</span>
+                            <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">RIB (Relevé d'Identité Bancaire)</span>
                           </div>
                         </div>
                         <label className="relative block">
@@ -960,7 +960,7 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
                             className="hidden"
                             onChange={(e) => console.log('Fichier sélectionné:', e.target.files?.[0])}
                           />
-                          <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm font-light text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+                          <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-light text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
                             <Upload className="w-4 h-4" />
                             <span>Télécharger le document</span>
                           </div>
@@ -972,42 +972,42 @@ export default function Dashboard({ onNotificationClick, notificationCount, onNa
 
                 {selectedContract.error_type === 'invalid_iban' && (
                   <div>
-                    <label className="block text-sm font-light text-gray-700 mb-2">IBAN</label>
+                    <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">IBAN</label>
                     <input
                       type="text"
                       placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX"
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+                      className="w-full px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
                     />
                   </div>
                 )}
 
                 {selectedContract.error_type === 'invalid_proof' && (
                   <div>
-                    <label className="block text-sm font-light text-gray-700 mb-2">Télécharger un nouveau justificatif</label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer">
-                      <FileCheck className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600 font-light">Cliquez pour télécharger un fichier</p>
-                      <p className="text-xs text-gray-500 font-light mt-1">PDF, JPG ou PNG (max 5MB)</p>
+                    <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">Télécharger un nouveau justificatif</label>
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-6 text-center hover:border-blue-400 dark:hover:border-blue-500 transition-colors cursor-pointer">
+                      <FileCheck className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400 font-light">Cliquez pour télécharger un fichier</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 font-light mt-1">PDF, JPG ou PNG (max 5MB)</p>
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Notes additionnelles</label>
+                  <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2">Notes additionnelles</label>
                   <textarea
                     placeholder="Ajoutez des remarques sur ce dossier..."
                     rows={3}
-                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light resize-none"
+                    className="w-full px-4 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light resize-none"
                   />
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-gray-200">
+                <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <button
                     onClick={() => {
                       setShowEditContractModal(false);
                       setSelectedContract(null);
                     }}
-                    className="flex-1 px-6 py-2.5 bg-white/80 border border-gray-200 text-gray-700 rounded-full text-sm font-light hover:bg-white transition-all"
+                    className="flex-1 px-6 py-2.5 bg-white/80 dark:bg-gray-700/80 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full text-sm font-light hover:bg-white dark:hover:bg-gray-700 transition-all"
                   >
                     Annuler
                   </button>
