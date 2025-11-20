@@ -123,8 +123,8 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
           <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-light mt-1 hidden sm:block">Accédez aux portails de nos partenaires</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onNotificationClick} className="w-10 h-10 rounded-full bg-[#E1E5EB] dark:bg-[#E1E5EB] flex items-center justify-center transition-all hover:scale-105 shadow-sm relative flex-shrink-0">
-            <Bell className="w-5 h-5 text-gray-600 dark:text-white/85" />
+          <button onClick={onNotificationClick} className="w-10 h-10 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 flex items-center justify-center transition-all hover:scale-105 shadow-sm relative flex-shrink-0">
+            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             {notificationCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-light shadow-lg animate-pulse">
                 {notificationCount}
@@ -153,7 +153,7 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
                   onClick={handleAddPartner}
                   className="px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 text-white flex items-center gap-2 transition-all hover:from-blue-600 hover:to-blue-700 shadow-md hover:scale-105 text-sm font-light"
                 >
-                  <Plus className="w-4 h-4 text-white dark:text-white" />
+                  <Plus className="w-4 h-4" />
                   <span className="hidden sm:inline">Ajouter un partenaire</span>
                 </button>
               ) : (
@@ -185,7 +185,7 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
                           className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-all shadow-md"
                           title="Modifier"
                         >
-                          <Edit2 className="w-4 h-4 text-white/85 dark:text-white/85" />
+                          <Edit2 className="w-4 h-4 text-white" />
                         </button>
                         <button
                           onClick={(e) => {
@@ -195,7 +195,7 @@ export default function Partenaires({ onNotificationClick, notificationCount }: 
                           className="w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all shadow-md"
                           title="Supprimer"
                         >
-                          <Trash2 className="w-4 h-4 text-white/85 dark:text-white/85" />
+                          <Trash2 className="w-4 h-4 text-white" />
                         </button>
                       </div>
                     )}

@@ -452,8 +452,8 @@ export default function Calendrier({ onNotificationClick, notificationCount }: C
           <h1 className="text-xl md:text-2xl font-light text-gray-900">Calendrier</h1>
           <p className="text-xs md:text-sm text-gray-500 font-light mt-1 hidden sm:block">Planifiez et organisez vos rendez-vous</p>
         </div>
-        <button onClick={onNotificationClick} className="w-10 h-10 rounded-full bg-[#E1E5EB] dark:bg-[#E1E5EB] flex items-center justify-center transition-all hover:scale-105 shadow-sm relative flex-shrink-0">
-          <Bell className="w-5 h-5 text-gray-600 dark:text-white/85" />
+        <button onClick={onNotificationClick} className="w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm relative flex-shrink-0">
+          <Bell className="w-5 h-5 text-gray-600" />
           {notificationCount > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-light shadow-lg animate-pulse">
               {notificationCount}
@@ -499,9 +499,9 @@ export default function Calendrier({ onNotificationClick, notificationCount }: C
                           <div className={`w-3 h-3 rounded-full ${getColorClasses(calendar.color)}`} />
                           <span className="text-sm font-light text-gray-900 flex-1">{calendar.name}</span>
                           {visibleCalendars.includes(calendar.id) ? (
-                            <Eye className="w-4 h-4 text-white/85 dark:text-white/85" />
+                            <Eye className="w-4 h-4 text-gray-600" />
                           ) : (
-                            <EyeOff className="w-4 h-4 text-white/85 dark:text-white/85" />
+                            <EyeOff className="w-4 h-4 text-gray-400" />
                           )}
                         </label>
                       ))}
@@ -511,12 +511,12 @@ export default function Calendrier({ onNotificationClick, notificationCount }: C
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <button onClick={navigatePrevious} className="w-11 h-11 rounded-full bg-[#E1E5EB] dark:bg-[#E1E5EB] flex items-center justify-center transition-all hover:scale-105 shadow-sm flex-shrink-0">
-                <ChevronLeft className="w-5 h-5 text-[#0C0F14] dark:text-[#0C0F14]" />
+              <button onClick={navigatePrevious} className="w-11 h-11 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm flex-shrink-0">
+                <ChevronLeft className="w-5 h-5 text-gray-600" />
               </button>
               <h2 className="text-lg font-light text-gray-900 capitalize whitespace-nowrap">{getDateRangeLabel()}</h2>
-              <button onClick={navigateNext} className="w-11 h-11 rounded-full bg-[#E1E5EB] dark:bg-[#E1E5EB] flex items-center justify-center transition-all hover:scale-105 shadow-sm flex-shrink-0">
-                <ChevronRight className="w-5 h-5 text-[#0C0F14] dark:text-[#0C0F14]" />
+              <button onClick={navigateNext} className="w-11 h-11 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm flex-shrink-0">
+                <ChevronRight className="w-5 h-5 text-gray-600" />
               </button>
             </div>
             <div className="flex gap-2 items-center flex-shrink-0">
@@ -547,7 +547,7 @@ export default function Calendrier({ onNotificationClick, notificationCount }: C
                 </button>
               </div>
               <button onClick={() => setShowAppointmentModal(true)} className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 flex items-center gap-2 shadow-md transition-all hover:scale-105">
-                <Plus className="w-5 h-5 text-white dark:text-white" />
+                <Plus className="w-5 h-5" />
                 <span className="whitespace-nowrap">Ajouter RDV</span>
               </button>
             </div>

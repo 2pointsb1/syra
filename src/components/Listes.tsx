@@ -107,8 +107,8 @@ export default function Listes({ onNotificationClick, notificationCount }: Liste
           <h1 className="text-xl md:text-2xl font-light text-gray-900">Listes</h1>
           <p className="text-xs md:text-sm text-gray-500 font-light mt-1 hidden sm:block">Gérer les listes de leads et leurs accès</p>
         </div>
-        <button onClick={onNotificationClick} className="w-10 h-10 rounded-full bg-[#E1E5EB] dark:bg-[#E1E5EB] flex items-center justify-center transition-all hover:scale-105 shadow-sm relative">
-          <Bell className="w-5 h-5 text-gray-600 dark:text-white/85" />
+        <button onClick={onNotificationClick} className="w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-all hover:scale-105 shadow-sm relative">
+          <Bell className="w-5 h-5 text-gray-600" />
           {notificationCount > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-light shadow-lg animate-pulse">
               {notificationCount}
@@ -133,7 +133,7 @@ export default function Listes({ onNotificationClick, notificationCount }: Liste
                 onClick={handleAddNew}
                 className="px-3 md:px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-xs md:text-sm font-light hover:from-blue-600 hover:to-blue-700 flex items-center gap-2 shadow-md transition-all hover:scale-105 whitespace-nowrap"
               >
-                <Plus className="w-4 h-4 text-white dark:text-white" />
+                <Plus className="w-4 h-4" />
                 Ajouter une liste
               </button>
             </div>
@@ -159,14 +159,14 @@ export default function Listes({ onNotificationClick, notificationCount }: Liste
                         className="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
                         title="Voir les leads"
                       >
-                        <Eye className="w-4 h-4 text-white/85 dark:text-white/85" />
+                        <Eye className="w-4 h-4 text-blue-600" />
                       </button>
                       <button
                         onClick={() => handleEditList(list)}
                         className="w-8 h-8 rounded-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
                         title="Éditer la liste"
                       >
-                        <Edit2 className="w-4 h-4 text-white/85 dark:text-white/85" />
+                        <Edit2 className="w-4 h-4 text-gray-600" />
                       </button>
                     </div>
                   </div>

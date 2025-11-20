@@ -124,9 +124,9 @@ export default function Client({ onNotificationClick, notificationCount, initial
         </div>
         <button
           onClick={onNotificationClick}
-          className="w-10 h-10 rounded-full bg-[#E1E5EB] dark:bg-[#E1E5EB] flex items-center justify-center transition-all hover:scale-105 shadow-sm relative"
+          className="w-10 h-10 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 flex items-center justify-center transition-all hover:scale-105 shadow-sm relative"
         >
-          <Bell className="w-5 h-5 text-gray-600 dark:text-white/85" />
+          <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           {notificationCount > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-light shadow-lg animate-pulse">
               {notificationCount}
@@ -204,9 +204,9 @@ export default function Client({ onNotificationClick, notificationCount, initial
                   )}
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/8 dark:bg-white/8 border border-gray-200 dark:border-white/15 text-gray-900 dark:text-white rounded-full text-sm font-light h-[38px] hover:bg-white/10 dark:hover:bg-white/10 transition-all"
+                    className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-light text-white dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                   >
-                    <Filter className="w-4 h-4 text-gray-600 dark:text-white" />
+                    <Filter className="w-4 h-4 text-white dark:text-gray-300" />
                     Filtres
                     {(filterName || filterProduct || filterStatus) && (
                       <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
