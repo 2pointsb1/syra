@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { User, Mail, Camera, Bell, Lock, Eye, EyeOff, CheckCircle, XCircle, Loader2, Image, Upload } from 'lucide-react';
 import { getGoogleSyncStatus, createGoogleSyncRecord, initiateGoogleOAuth, disconnectGoogleSync, GoogleSyncStatus } from '../services/googleSyncService';
 import { getActiveProfile, getProfilePermissions, UserProfile } from '../services/profileService';
-import { getOrganizationSettings, uploadMainLogo, uploadCollapsedLogo } from '../services/organizationSettingsService';
+import { getOrganizationSettings, uploadMainLogo, uploadCollapsedLogo, uploadMainLogoDark, uploadCollapsedLogoDark } from '../services/organizationSettingsService';
 
 interface ParametresProps {
   onNotificationClick: () => void;
@@ -37,12 +37,18 @@ export default function Parametres({ onNotificationClick, notificationCount }: P
   const [canManageSettings, setCanManageSettings] = useState(false);
   const [mainLogoUrl, setMainLogoUrl] = useState<string | null>(null);
   const [collapsedLogoUrl, setCollapsedLogoUrl] = useState<string | null>(null);
+  const [mainLogoDarkUrl, setMainLogoDarkUrl] = useState<string | null>(null);
+  const [collapsedLogoDarkUrl, setCollapsedLogoDarkUrl] = useState<string | null>(null);
   const [isUploadingMainLogo, setIsUploadingMainLogo] = useState(false);
   const [isUploadingCollapsedLogo, setIsUploadingCollapsedLogo] = useState(false);
+  const [isUploadingMainLogoDark, setIsUploadingMainLogoDark] = useState(false);
+  const [isUploadingCollapsedLogoDark, setIsUploadingCollapsedLogoDark] = useState(false);
   const [logoSuccessMessage, setLogoSuccessMessage] = useState('');
   const [logoErrorMessage, setLogoErrorMessage] = useState('');
   const mainLogoInputRef = useRef<HTMLInputElement>(null);
   const collapsedLogoInputRef = useRef<HTMLInputElement>(null);
+  const mainLogoDarkInputRef = useRef<HTMLInputElement>(null);
+  const collapsedLogoDarkInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadGoogleSyncStatus();
@@ -76,6 +82,8 @@ export default function Parametres({ onNotificationClick, notificationCount }: P
       if (settings) {
         setMainLogoUrl(settings.main_logo_url);
         setCollapsedLogoUrl(settings.collapsed_logo_url);
+        setMainLogoDarkUrl(settings.main_logo_dark_url);
+        setCollapsedLogoDarkUrl(settings.collapsed_logo_dark_url);
       }
     } catch (err) {
       console.error('Error loading logos:', err);
@@ -200,6 +208,56 @@ export default function Parametres({ onNotificationClick, notificationCount }: P
       setLogoErrorMessage(err instanceof Error ? err.message : 'Erreur lors du téléchargement');
     } finally {
       setIsUploadingCollapsedLogo(false);
+    }
+  };
+
+  const handleMainLogoDarkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setLogoErrorMessage('Seuls les fichiers image sont autorisés');
+      return;
+    }
+
+    try {
+      setIsUploadingMainLogoDark(true);
+      setLogoErrorMessage('');
+      setLogoSuccessMessage('');
+      const url = await uploadMainLogoDark(file);
+      setMainLogoDarkUrl(url);
+      setLogoSuccessMessage('Logo dark mode principal mis à jour avec succès');
+      setTimeout(() => setLogoSuccessMessage(''), 3000);
+      window.location.reload();
+    } catch (err) {
+      setLogoErrorMessage(err instanceof Error ? err.message : 'Erreur lors du téléchargement');
+    } finally {
+      setIsUploadingMainLogoDark(false);
+    }
+  };
+
+  const handleCollapsedLogoDarkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setLogoErrorMessage('Seuls les fichiers image sont autorisés');
+      return;
+    }
+
+    try {
+      setIsUploadingCollapsedLogoDark(true);
+      setLogoErrorMessage('');
+      setLogoSuccessMessage('');
+      const url = await uploadCollapsedLogoDark(file);
+      setCollapsedLogoDarkUrl(url);
+      setLogoSuccessMessage('Logo dark mode réduit mis à jour avec succès');
+      setTimeout(() => setLogoSuccessMessage(''), 3000);
+      window.location.reload();
+    } catch (err) {
+      setLogoErrorMessage(err instanceof Error ? err.message : 'Erreur lors du téléchargement');
+    } finally {
+      setIsUploadingCollapsedLogoDark(false);
     }
   };
 
@@ -610,6 +668,99 @@ export default function Parametres({ onNotificationClick, notificationCount }: P
                       <p className="text-xs text-gray-500 font-light mt-2 text-center">
                         PNG, JPG, SVG - Max 2MB
                       </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-light text-gray-900 dark:text-gray-100 mb-4">Logos mode sombre</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 font-light mb-6">
+                    Personnalisez les logos qui s'affichent lorsque le thème sombre est activé.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Logo principal dark mode (sidebar étendue)
+                      </label>
+                      <div className="glass-card p-4 rounded-2xl border border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center justify-center h-32 mb-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl">
+                          {mainLogoDarkUrl ? (
+                            <img src={mainLogoDarkUrl} alt="Logo principal dark mode" className="max-h-24 object-contain" />
+                          ) : (
+                            <img src="/Bienviyance-logo-7.png" alt="Logo dark mode par défaut" className="max-h-24 object-contain" />
+                          )}
+                        </div>
+                        <button
+                          onClick={() => mainLogoDarkInputRef.current?.click()}
+                          disabled={isUploadingMainLogoDark}
+                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 rounded-2xl text-sm font-light text-gray-700 dark:text-gray-300 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                          {isUploadingMainLogoDark ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Téléchargement...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4" />
+                              Modifier le logo dark mode
+                            </>
+                          )}
+                        </button>
+                        <input
+                          ref={mainLogoDarkInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleMainLogoDarkUpload}
+                          className="hidden"
+                        />
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-light mt-2 text-center">
+                          PNG, JPG, SVG - Max 2MB
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Logo réduit dark mode (sidebar rétractée)
+                      </label>
+                      <div className="glass-card p-4 rounded-2xl border border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center justify-center h-32 mb-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl">
+                          {collapsedLogoDarkUrl ? (
+                            <img src={collapsedLogoDarkUrl} alt="Logo réduit dark mode" className="max-h-20 object-contain" />
+                          ) : (
+                            <img src="/Bienviyance-logo-7.png" alt="Logo dark mode par défaut" className="max-h-20 object-contain" />
+                          )}
+                        </div>
+                        <button
+                          onClick={() => collapsedLogoDarkInputRef.current?.click()}
+                          disabled={isUploadingCollapsedLogoDark}
+                          className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 rounded-2xl text-sm font-light text-gray-700 dark:text-gray-300 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                          {isUploadingCollapsedLogoDark ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Téléchargement...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4" />
+                              Modifier le logo dark mode
+                            </>
+                          )}
+                        </button>
+                        <input
+                          ref={collapsedLogoDarkInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleCollapsedLogoDarkUpload}
+                          className="hidden"
+                        />
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-light mt-2 text-center">
+                          PNG, JPG, SVG - Max 2MB
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -27,6 +27,7 @@ import ProfileSwitcher from './ProfileSwitcher';
 import ThemeToggle from './ThemeToggle';
 import { UserProfile, getActiveProfile, getProfilePermissions, getProfileBadgeColor } from '../services/profileService';
 import { getOrganizationSettings } from '../services/organizationSettingsService';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface SidebarProps {
   currentPage: string;
@@ -36,6 +37,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onLogout }: SidebarProps) {
+  const { theme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,6 +45,8 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
   const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
   const [mainLogoUrl, setMainLogoUrl] = useState<string | null>(null);
   const [collapsedLogoUrl, setCollapsedLogoUrl] = useState<string | null>(null);
+  const [mainLogoDarkUrl, setMainLogoDarkUrl] = useState<string | null>(null);
+  const [collapsedLogoDarkUrl, setCollapsedLogoDarkUrl] = useState<string | null>(null);
 
   useEffect(() => {
     loadActiveProfile();
@@ -64,6 +68,8 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
       if (settings) {
         setMainLogoUrl(settings.main_logo_url);
         setCollapsedLogoUrl(settings.collapsed_logo_url);
+        setMainLogoDarkUrl(settings.main_logo_dark_url);
+        setCollapsedLogoDarkUrl(settings.collapsed_logo_dark_url);
       }
     } catch (err) {
       console.error('Error loading logos:', err);
@@ -151,7 +157,11 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
       <div className="p-6 relative">
         <div className="flex items-center justify-center mb-6 relative">
           <img
-            src={isCollapsed ? (collapsedLogoUrl || "/Bienvisport-logo-b.png") : (mainLogoUrl || "/Bienviyance-logo-2.png")}
+            src={
+              isCollapsed
+                ? (theme === 'dark' ? (collapsedLogoDarkUrl || "/Bienviyance-logo-7.png") : (collapsedLogoUrl || "/Bienvisport-logo-b.png"))
+                : (theme === 'dark' ? (mainLogoDarkUrl || "/Bienviyance-logo-7.png") : (mainLogoUrl || "/Bienviyance-logo-2.png"))
+            }
             alt="Bienviyance"
             className={`${isCollapsed ? 'h-10' : 'h-8'} object-contain transition-all duration-300`}
           />
