@@ -705,29 +705,29 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
           <div className="flex items-center gap-2 md:gap-3 overflow-x-auto ml-auto">
             <button
               onClick={() => setLeadViewMode('conseiller')}
-              className={`w-9 h-9 rounded-full ${leadViewMode === 'conseiller' ? 'bg-white shadow-md' : 'bg-white/80 hover:bg-white shadow-sm'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0 hidden md:flex`}
+              className={`w-9 h-9 rounded-full ${leadViewMode === 'conseiller' ? 'bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0 hidden md:flex`}
               title="Vue Conseillère"
             >
-              <User className="w-5 h-5 text-gray-600 dark:text-[#101828]" />
+              <User className="w-5 h-5 text-gray-900 dark:text-gray-300" />
             </button>
             <button
               onClick={() => setLeadViewMode('manager')}
-              className={`w-9 h-9 rounded-full ${leadViewMode === 'manager' ? 'bg-white shadow-md' : 'bg-white/80 hover:bg-white shadow-sm'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0 hidden md:flex`}
+              className={`w-9 h-9 rounded-full ${leadViewMode === 'manager' ? 'bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0 hidden md:flex`}
               title="Vue Manager"
             >
-              <Users className="w-5 h-5 text-gray-600 dark:text-[#101828]" />
+              <Users className="w-5 h-5 text-gray-900 dark:text-gray-300" />
             </button>
             <button
-              className={`w-9 h-9 rounded-full ${viewMode === 'table' ? 'bg-white shadow-md' : 'bg-white/80 hover:bg-white shadow-sm'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0`}
+              className={`w-9 h-9 rounded-full ${viewMode === 'table' ? 'bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0`}
               onClick={() => setViewMode('table')}
             >
-              <List className="w-5 h-5 text-gray-600 dark:text-[#101828]" />
+              <List className="w-5 h-5 text-gray-900 dark:text-gray-300" />
             </button>
             <button
-              className={`w-9 h-9 rounded-full ${viewMode === 'cards' ? 'bg-white shadow-md' : 'bg-white/80 hover:bg-white shadow-sm'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0`}
+              className={`w-9 h-9 rounded-full ${viewMode === 'cards' ? 'bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'} flex items-center justify-center transition-all hover:scale-105 flex-shrink-0`}
               onClick={() => setViewMode('cards')}
             >
-              <LayoutGrid className="w-5 h-5 text-gray-600 dark:text-[#101828]" />
+              <LayoutGrid className="w-5 h-5 text-gray-900 dark:text-gray-300" />
             </button>
 
             <button
