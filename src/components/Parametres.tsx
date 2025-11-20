@@ -730,7 +730,7 @@ export default function Parametres({ onNotificationClick, notificationCount }: P
                           {collapsedLogoDarkUrl ? (
                             <img src={collapsedLogoDarkUrl} alt="Logo réduit dark mode" className="max-h-20 object-contain" />
                           ) : (
-                            <img src="/Bienviyance-logo-7.png" alt="Logo dark mode par défaut" className="max-h-20 object-contain" />
+                            <img src="/Bienvisport-logo-b.png" alt="Logo B par défaut" className="max-h-20 object-contain" />
                           )}
                         </div>
                         <button

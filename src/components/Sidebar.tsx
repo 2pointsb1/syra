@@ -159,7 +159,7 @@ export default function Sidebar({ currentPage, onNavigate, onCollapseChange, onL
           <img
             src={
               isCollapsed
-                ? (theme === 'dark' ? (collapsedLogoDarkUrl || "/Bienviyance-logo-7.png") : (collapsedLogoUrl || "/Bienvisport-logo-b.png"))
+                ? (theme === 'dark' ? (collapsedLogoDarkUrl || "/Bienvisport-logo-b.png") : (collapsedLogoUrl || "/Bienvisport-logo-b.png"))
                 : (theme === 'dark' ? (mainLogoDarkUrl || "/Bienviyance-logo-7.png") : (mainLogoUrl || "/Bienviyance-logo-2.png"))
             }
             alt="Bienviyance"
