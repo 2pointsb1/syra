@@ -1,4 +1,4 @@
-import { Users, Phone, Calendar, FileCheck, Bell } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
 import { useState } from 'react';
 
 interface PerformanceProps {
@@ -7,14 +7,26 @@ interface PerformanceProps {
 }
 
 export default function Performance({ onNotificationClick, notificationCount }: PerformanceProps) {
-  const [selectedTab, setSelectedTab] = useState<'generales' | 'leads-chauds'>('generales');
-  const [duration, setDuration] = useState('2 semaines');
+  const [startDate, setStartDate] = useState('2025-11-07');
+  const [endDate, setEndDate] = useState('2025-11-21');
+  const [selectedList, setSelectedList] = useState('Toutes les listes');
+  const [searchUser, setSearchUser] = useState('');
 
   const kpis = [
-    { label: 'Nombre de leads', value: '335424', icon: Users, color: 'from-blue-400 to-blue-600' },
-    { label: 'À rappeler', value: '5859', icon: Phone, color: 'from-violet-400 to-violet-600' },
-    { label: 'RDV pris', value: '11566', icon: Calendar, color: 'from-indigo-400 to-indigo-600' },
-    { label: 'Signés', value: '181', icon: FileCheck, color: 'from-purple-400 to-purple-600' },
+    { label: 'Leads travaillés', value: '5530' },
+    { label: 'RDV pris', value: '399' },
+    { label: 'Ventes', value: '11' },
+    { label: 'RDV / total', value: '7.2%' },
+    { label: 'Taux de signature RDV', value: '2.8%' },
+    { label: 'Faux numéros', value: '13.2%' },
+  ];
+
+  const userPerformances = [
+    { name: 'Moche Azran (M)', leadsWorked: 5, rdvTaken: 0, signed: 1 },
+    { name: 'Henoc Nsumbu', leadsWorked: 568, rdvTaken: 16, signed: 0 },
+    { name: 'Romain Camesciali', leadsWorked: 171, rdvTaken: 3, signed: 0 },
+    { name: 'Sophie Azuelos', leadsWorked: 11, rdvTaken: 2, signed: 0 },
+    { name: 'David Bouaziz', leadsWorked: 1068, rdvTaken: 42, signed: 0 },
   ];
 
   const generateLineChartData = (points: number) => {
@@ -69,73 +81,94 @@ export default function Performance({ onNotificationClick, notificationCount }: 
       </header>
 
       <div className="p-4 md:p-6 lg:p-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-          {kpis.map((kpi) => {
-            const Icon = kpi.icon;
-            return (
-              <div key={kpi.label} className="glass-card glass-card-hover p-6 floating-shadow">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${kpi.color} flex items-center justify-center shadow-lg`}>
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="text-sm text-gray-500 font-light">{kpi.label}</span>
-                </div>
-                <p className="text-3xl font-light text-gray-900">{kpi.value}</p>
+        <div className="glass-card p-6 floating-shadow mb-6">
+          <h2 className="text-lg font-light text-gray-900 mb-4">Filtres</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm text-gray-600 font-light mb-2">Date de début</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 font-light mb-2">Date de fin</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 font-light mb-2">Liste</label>
+              <select
+                value={selectedList}
+                onChange={(e) => setSelectedList(e.target.value)}
+                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+              >
+                <option>Toutes les listes</option>
+                <option>Professions médicales</option>
+                <option>Nouveaux leads</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 font-light mb-2">Recherche utilisateur</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchUser}
+                  onChange={(e) => setSearchUser(e.target.value)}
+                  placeholder="Rechercher un utilisateur..."
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+                />
               </div>
-            );
-          })}
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-2 md:gap-4 mb-6 md:mb-8 overflow-x-auto">
-          <button
-            onClick={() => setSelectedTab('generales')}
-            className={`px-4 md:px-5 py-2 text-xs md:text-sm font-light rounded-full transition-all whitespace-nowrap ${
-              selectedTab === 'generales'
-                ? 'text-blue-600 bg-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
-            }`}
-          >
-            Générales
-          </button>
-          <button
-            onClick={() => setSelectedTab('leads-chauds')}
-            className={`px-4 md:px-5 py-2 text-xs md:text-sm font-light rounded-full transition-all whitespace-nowrap ${
-              selectedTab === 'leads-chauds'
-                ? 'text-blue-600 bg-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
-            }`}
-          >
-            Leads chauds
-          </button>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          {kpis.map((kpi) => (
+            <div key={kpi.label} className="glass-card p-4 floating-shadow text-center">
+              <p className="text-xs text-gray-600 font-light mb-2">{kpi.label}</p>
+              <p className="text-2xl md:text-3xl font-light text-blue-600">{kpi.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="glass-card p-6 floating-shadow mb-6">
+          <h2 className="text-lg font-light text-gray-900 mb-4">Performances utilisateurs</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Nom</th>
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Leads travaillés</th>
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">RDV pris</th>
+                  <th className="px-4 py-3 text-left text-sm font-light text-gray-600">Signé</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {userPerformances.map((user, index) => (
+                  <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-4 py-3 text-sm font-light text-gray-900">{user.name}</td>
+                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.leadsWorked}</td>
+                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.rdvTaken}</td>
+                    <td className="px-4 py-3 text-sm font-light text-gray-700">{user.signed}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="glass-card p-4 md:p-6 lg:p-8 floating-shadow mb-6 md:mb-8">
-          <div className="flex flex-col md:flex-row items-start justify-between gap-4 mb-6 md:mb-8">
-            <div>
-              <h3 className="text-base md:text-lg font-light text-gray-900 mb-1">Durée</h3>
-              <p className="text-xs md:text-sm text-gray-500 font-light">Visualisez les métriques de votre entreprise.</p>
-            </div>
-            <div>
-              <label className="block text-xs md:text-sm text-gray-600 font-light mb-2">Sélectionnez une durée:</label>
-              <select
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="w-full md:w-auto px-4 py-2 bg-white border border-gray-200 rounded-2xl text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
-              >
-                <option>7 jours</option>
-                <option>2 semaines</option>
-                <option>1 mois</option>
-                <option>3 mois</option>
-              </select>
-            </div>
-          </div>
-
           <div className="space-y-12">
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h4 className="text-base font-light text-gray-900">Leads utilisés par jour</h4>
-                <span className="text-xl md:text-2xl font-light text-gray-900">{Math.round(maxLeads)}</span>
-              </div>
+              <h4 className="text-base font-light text-gray-900 mb-6">Leads utilisés par jour</h4>
               <div className="relative h-64">
                 <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="none">
                   <defs>
@@ -163,14 +196,24 @@ export default function Performance({ onNotificationClick, notificationCount }: 
                     const x = (index / (leadsData.length - 1)) * 1000;
                     const y = 180 - (value / maxLeads) * 180;
                     return (
-                      <circle
-                        key={index}
-                        cx={x}
-                        cy={y}
-                        r="4"
-                        fill="#818CF8"
-                        className="hover:r-6 transition-all cursor-pointer"
-                      />
+                      <g key={index}>
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="4"
+                          fill="#818CF8"
+                          className="hover:r-6 transition-all cursor-pointer"
+                        />
+                        <text
+                          x={x}
+                          y={y - 10}
+                          textAnchor="middle"
+                          className="text-xs fill-gray-600 font-light"
+                          style={{ fontSize: '10px' }}
+                        >
+                          {Math.round(value)}
+                        </text>
+                      </g>
                     );
                   })}
                 </svg>
@@ -182,19 +225,11 @@ export default function Performance({ onNotificationClick, notificationCount }: 
                     </span>
                   ))}
                 </div>
-
-                <div className="flex items-center justify-center gap-2 mt-6">
-                  <div className="w-3 h-3 rounded-full bg-indigo-400"></div>
-                  <span className="text-sm text-gray-600 font-light">Nombre de leads</span>
-                </div>
               </div>
             </div>
 
             <div className="border-t border-gray-200 pt-12">
-              <div className="flex items-center justify-between mb-6">
-                <h4 className="text-base font-light text-gray-900">Rendez-vous pris par jour</h4>
-                <span className="text-xl md:text-2xl font-light text-gray-900">{Math.round(maxRdv)}</span>
-              </div>
+              <h4 className="text-base font-light text-gray-900 mb-6">Rendez-vous pris par jour</h4>
               <div className="relative h-64">
                 <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="none">
                   <defs>
@@ -222,14 +257,24 @@ export default function Performance({ onNotificationClick, notificationCount }: 
                     const x = (index / (rdvData.length - 1)) * 1000;
                     const y = 180 - (value / maxRdv) * 180;
                     return (
-                      <circle
-                        key={index}
-                        cx={x}
-                        cy={y}
-                        r="4"
-                        fill="#818CF8"
-                        className="hover:r-6 transition-all cursor-pointer"
-                      />
+                      <g key={index}>
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="4"
+                          fill="#818CF8"
+                          className="hover:r-6 transition-all cursor-pointer"
+                        />
+                        <text
+                          x={x}
+                          y={y - 10}
+                          textAnchor="middle"
+                          className="text-xs fill-gray-600 font-light"
+                          style={{ fontSize: '10px' }}
+                        >
+                          {Math.round(value)}
+                        </text>
+                      </g>
                     );
                   })}
                 </svg>
@@ -240,11 +285,6 @@ export default function Performance({ onNotificationClick, notificationCount }: 
                       {date}
                     </span>
                   ))}
-                </div>
-
-                <div className="flex items-center justify-center gap-2 mt-6">
-                  <div className="w-3 h-3 rounded-full bg-indigo-400"></div>
-                  <span className="text-sm text-gray-600 font-light">Nombre de leads</span>
                 </div>
               </div>
             </div>
