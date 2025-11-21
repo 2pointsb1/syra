@@ -1007,11 +1007,17 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
                           <span
                             onClick={() => setShowStatusMenu(showStatusMenu === lead.id ? null : lead.id)}
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-light border cursor-pointer w-fit ${
-                              lead.status === 'NRP' ? 'bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 border-orange-200/50' :
-                              lead.status === 'Sans statut' ? 'bg-gradient-to-r from-red-100 to-red-50 text-red-700 border-red-200/50' :
-                              lead.status === 'À rappeler' ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200/50' :
-                              lead.status === 'RDV pris' ? 'bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border-purple-200/50' :
+                              lead.status === 'Sans statut' ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200/50' :
+                              lead.status === 'NRP' ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200/50' :
+                              lead.status === 'Nul' ? 'bg-gradient-to-r from-yellow-100 to-yellow-50 text-yellow-700 border-yellow-200/50' :
+                              lead.status === 'À rappeler' ? 'bg-gradient-to-r from-cyan-100 to-cyan-50 text-cyan-700 border-cyan-200/50' :
+                              lead.status === 'Intéressé' ? 'bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border-purple-200/50' :
+                              lead.status === 'RDV pris' ? 'bg-gradient-to-r from-violet-100 to-violet-50 text-violet-700 border-violet-200/50' :
+                              lead.status === 'RDV honoré' ? 'bg-gradient-to-r from-lime-100 to-lime-50 text-lime-700 border-lime-200/50' :
                               lead.status === 'Signé' ? 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border-green-200/50' :
+                              lead.status === 'RDV manqué' ? 'bg-gradient-to-r from-pink-100 to-pink-50 text-pink-700 border-pink-200/50' :
+                              lead.status === 'Faux numéro' ? 'bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 border-orange-200/50' :
+                              lead.status === 'Pas intéressé' ? 'bg-gradient-to-r from-red-100 to-red-50 text-red-700 border-red-200/50' :
                               'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 border-gray-200/50'
                             }`}>
                             {lead.status === 'NRP' && lead.nrp_count && lead.nrp_count > 0 && (
@@ -1026,21 +1032,43 @@ export default function Leads({ onNotificationClick, notificationCount, initialF
                           )}
                         </div>
                         {showStatusMenu === lead.id && (
-                          <div className="absolute top-full left-0 mt-1 bg-white rounded-2xl shadow-xl border border-gray-200 p-2 z-10 min-w-max">
-                            <button onClick={() => {
-                              const updates: Partial<Lead> = { status: 'NRP', nrp_count: (lead.nrp_count || 0) + 1 };
-                              handleLeadUpdate(lead.id, updates);
-                              setShowStatusMenu(null);
-                            }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-orange-50 text-orange-700">NRP</button>
-                            <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Sans statut' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-red-50 text-red-700">Sans statut</button>
-                            <button onClick={() => { handleLeadUpdate(lead.id, { status: 'À rappeler' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-blue-50 text-blue-700">À rappeler</button>
-                            <button onClick={() => {
-                              handleLeadUpdate(lead.id, { status: 'RDV pris' });
-                              setShowStatusMenu(null);
-                              setSelectedLeadForAppointment(lead);
-                              setShowAppointmentModalForLead(true);
-                            }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-purple-50 text-purple-700">RDV pris</button>
-                            {canViewAllStatuses && <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Signé' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-green-50 text-green-700">Signé</button>}
+                          <div className="absolute top-full left-0 mt-1 bg-white rounded-2xl shadow-xl border border-gray-200 p-2 z-10 min-w-max max-h-64 overflow-y-auto">
+                            {canViewAllStatuses ? (
+                              <>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Sans statut' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-gray-50 text-gray-700">Sans statut</button>
+                                <button onClick={() => {
+                                  const updates: Partial<Lead> = { status: 'NRP', nrp_count: (lead.nrp_count || 0) + 1 };
+                                  handleLeadUpdate(lead.id, updates);
+                                  setShowStatusMenu(null);
+                                }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-blue-50 text-blue-700">NRP</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Nul' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-yellow-50 text-yellow-700">Nul</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'À rappeler' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-cyan-50 text-cyan-700">À rappeler</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Intéressé' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-purple-50 text-purple-700">Intéressé</button>
+                                <button onClick={() => {
+                                  handleLeadUpdate(lead.id, { status: 'RDV pris' });
+                                  setShowStatusMenu(null);
+                                  setSelectedLeadForAppointment(lead);
+                                  setShowAppointmentModalForLead(true);
+                                }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-violet-50 text-violet-700">RDV pris</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'RDV honoré' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-lime-50 text-lime-700">RDV honoré</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Signé' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-green-50 text-green-700">Signé</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'RDV manqué' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-pink-50 text-pink-700">RDV manqué</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Faux numéro' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-orange-50 text-orange-700">Faux numéro</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Pas intéressé' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-red-50 text-red-700">Pas intéressé</button>
+                              </>
+                            ) : (
+                              <>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Sans statut' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-gray-50 text-gray-700">Sans statut</button>
+                                <button onClick={() => {
+                                  const updates: Partial<Lead> = { status: 'NRP', nrp_count: (lead.nrp_count || 0) + 1 };
+                                  handleLeadUpdate(lead.id, updates);
+                                  setShowStatusMenu(null);
+                                }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-blue-50 text-blue-700">NRP</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'À rappeler' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-cyan-50 text-cyan-700">À rappeler</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Intéressé' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-purple-50 text-purple-700">Intéressé</button>
+                                <button onClick={() => { handleLeadUpdate(lead.id, { status: 'Pas intéressé' }); setShowStatusMenu(null); }} className="block w-full text-left px-3 py-2 text-xs font-light rounded-xl hover:bg-red-50 text-red-700">Pas intéressé</button>
+                              </>
+                            )}
                           </div>
                         )}
                       </td>
