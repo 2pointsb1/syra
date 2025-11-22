@@ -27,6 +27,7 @@ export interface Lead {
   phone: string;
   status: 'Sans statut' | 'NRP' | 'Nul' | 'À rappeler' | 'Intéressé' | 'RDV pris' | 'RDV honoré' | 'Signé' | 'RDV manqué' | 'Faux numéro' | 'Pas intéressé';
   nrp_count?: number;
+  rdv_count?: number;
   owner?: string;
   owner_since?: string;
   status_updated_at?: string;

@@ -112,6 +112,8 @@ export default function NewDevoirConseil({ onClose, onSubmit, initialData, conse
   const [currentContractForAssureur, setCurrentContractForAssureur] = useState<number | null>(null);
   const [savedComment, setSavedComment] = useState<string>('');
   const [isCommentSaved, setIsCommentSaved] = useState(false);
+  const [showAffairesNouvellesModal, setShowAffairesNouvellesModal] = useState(false);
+  const [attachments, setAttachments] = useState<File[]>([]);
   const [contractDescriptions, setContractDescriptions] = useState<{[key: number]: string}>({});
   const [contractJustifications, setContractJustifications] = useState<{[key: number]: string}>({});
   const [showPredefinedMessagesModal, setShowPredefinedMessagesModal] = useState(false);
@@ -687,6 +689,79 @@ export default function NewDevoirConseil({ onClose, onSubmit, initialData, conse
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400"
                   />
                 </div>
+              </div>
+
+              <div className="glass-card floating-shadow p-6">
+                <h3 className="text-base font-normal text-gray-800 mb-4">Pièces jointes</h3>
+                <p className="text-xs text-gray-500 font-light mb-4">Format accepté: PDF, JPG (5Mo maximum par fichier)</p>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                  <input
+                    type="file"
+                    id="attachments-input"
+                    accept=".pdf,.jpg,.jpeg"
+                    multiple
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      const validFiles = files.filter(file => {
+                        const isValidType = file.type === 'application/pdf' || file.type === 'image/jpeg' || file.type === 'image/jpg';
+                        const isValidSize = file.size <= 5 * 1024 * 1024;
+                        if (!isValidType) {
+                          alert(`${file.name}: Format non accepté. Uniquement PDF et JPG.`);
+                          return false;
+                        }
+                        if (!isValidSize) {
+                          alert(`${file.name}: Fichier trop volumineux (max 5Mo).`);
+                          return false;
+                        }
+                        return true;
+                      });
+                      setAttachments([...attachments, ...validFiles]);
+                      e.target.value = '';
+                    }}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="attachments-input"
+                    className="cursor-pointer flex flex-col items-center"
+                  >
+                    <Paperclip className="w-8 h-8 text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-600 font-light">Cliquez pour ajouter des fichiers</p>
+                    <p className="text-xs text-gray-500 font-light mt-1">ou glissez-déposez vos fichiers ici</p>
+                  </label>
+                </div>
+
+                {attachments.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    <h4 className="text-sm font-normal text-gray-700">Fichiers ajoutés ({attachments.length})</h4>
+                    {attachments.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex items-center gap-3 flex-1">
+                          {file.type === 'application/pdf' ? (
+                            <FileText className="w-5 h-5 text-red-500" />
+                          ) : (
+                            <FileText className="w-5 h-5 text-blue-500" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-gray-900 font-light truncate">{file.name}</p>
+                            <p className="text-xs text-gray-500 font-light">
+                              {(file.size / 1024).toFixed(2)} Ko
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAttachments(attachments.filter((_, i) => i !== index));
+                          }}
+                          className="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center transition-all"
+                        >
+                          <X className="w-4 h-4 text-gray-600" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -1490,6 +1565,12 @@ export default function NewDevoirConseil({ onClose, onSubmit, initialData, conse
             >
               Signature par email
             </button>
+            <button
+              onClick={() => setShowAffairesNouvellesModal(true)}
+              className="px-6 py-2.5 bg-white border border-blue-500 text-blue-600 rounded-full text-sm font-light hover:bg-blue-50 transition-all"
+            >
+              Envoyer en affaires nouvelles
+            </button>
           </div>
           <button
             onClick={() => setShowPreviewModal(true)}
@@ -1548,6 +1629,61 @@ export default function NewDevoirConseil({ onClose, onSubmit, initialData, conse
                   className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all"
                 >
                   Valider
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Affaires Nouvelles Modal */}
+      {showAffairesNouvellesModal && (
+        <>
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]" onClick={() => setShowAffairesNouvellesModal(false)} />
+          <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Envoyer en affaires nouvelles
+              </h3>
+              <p className="text-sm text-gray-600 mb-6">
+                Êtes-vous sûr de vouloir envoyer ce devoir de conseil en affaires nouvelles ? Cette action marquera le dossier comme étant traité.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowAffairesNouvellesModal(false)}
+                  className="flex-1 px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-full text-sm font-light hover:bg-gray-50 transition-all"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      if (conseilId) {
+                        const { error } = await supabase
+                          .from('devoirs_conseil')
+                          .update({
+                            affaires_nouvelles_status: 'sent',
+                            affaires_nouvelles_sent_at: new Date().toISOString()
+                          })
+                          .eq('id', conseilId);
+
+                        if (error) throw error;
+                      }
+
+                      setShowAffairesNouvellesModal(false);
+                      setSuccessMessage('Le devoir de conseil a été envoyé en affaires nouvelles avec succès !');
+                      setShowSuccessMessage(true);
+                      setTimeout(() => {
+                        setShowSuccessMessage(false);
+                      }, 3000);
+                    } catch (error) {
+                      console.error('Error sending to affaires nouvelles:', error);
+                      alert('Erreur lors de l\'envoi en affaires nouvelles');
+                    }
+                  }}
+                  className="flex-1 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full text-sm font-light hover:from-blue-600 hover:to-blue-700 shadow-md transition-all"
+                >
+                  Confirmer
                 </button>
               </div>
             </div>

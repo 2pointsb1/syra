@@ -361,6 +361,13 @@ function LeadCard({ lead, onUpdate, showOwner, canViewAllStatuses }: { lead: Lea
     }
 
     if (status === 'RDV pris') {
+      const currentRdvCount = localLead.rdv_count || 0;
+      if (currentRdvCount >= 2) {
+        alert('Ce lead a déjà atteint le maximum de 2 RDV pris.');
+        setShowStatusMenu(false);
+        return;
+      }
+      updates.rdv_count = currentRdvCount + 1;
       setShowStatusMenu(false);
       setShowAppointmentModal(true);
       setLocalLead({ ...localLead, ...updates });
@@ -456,6 +463,9 @@ function LeadCard({ lead, onUpdate, showOwner, canViewAllStatuses }: { lead: Lea
             >
               {localLead.status === 'NRP' && localLead.nrp_count && localLead.nrp_count > 0 && (
                 <span className="mr-1.5">+{localLead.nrp_count}</span>
+              )}
+              {localLead.status === 'RDV pris' && localLead.rdv_count && localLead.rdv_count > 0 && (
+                <span className="mr-1.5">+{localLead.rdv_count}</span>
               )}
               {localLead.status}
             </span>
