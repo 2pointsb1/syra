@@ -1,4 +1,4 @@
-import { X, Clock, MapPin, Bell, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { X, Clock, MapPin, Bell, ChevronLeft, ChevronRight, Search, Video } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Lead } from '../types';
@@ -158,6 +158,12 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
     const [hours, minutes] = startTime.split(':').map(Number);
     const endHour = hours + 1;
     return `${endHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+
+  const generateGoogleMeetLink = () => {
+    const meetId = Math.random().toString(36).substring(2, 12);
+    const meetLink = `https://meet.google.com/${meetId}`;
+    setLocation(meetLink);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -441,15 +447,25 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
             <div>
               <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-400" />
-                Lieu (optionnel)
+                Lieu / Lien visio (optionnel)
               </label>
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
-                placeholder="Adresse ou lien de visio..."
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="flex-1 px-4 py-2.5 bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50 font-light"
+                  placeholder="Adresse ou lien de visio..."
+                />
+                <button
+                  type="button"
+                  onClick={generateGoogleMeetLink}
+                  className="px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 rounded-2xl text-sm font-light hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all flex items-center gap-2 whitespace-nowrap"
+                >
+                  <Video className="w-4 h-4" />
+                  Générer lien visio
+                </button>
+              </div>
             </div>
 
             {enableReminder && (
