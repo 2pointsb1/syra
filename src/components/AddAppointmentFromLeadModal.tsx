@@ -161,8 +161,13 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
   };
 
   const generateGoogleMeetLink = () => {
-    const meetId = Math.random().toString(36).substring(2, 12);
-    const meetLink = `https://meet.google.com/${meetId}`;
+    const generateSegment = (length: number) => {
+      return Math.random().toString(36).substring(2, 2 + length);
+    };
+    const segment1 = generateSegment(3);
+    const segment2 = generateSegment(4);
+    const segment3 = generateSegment(3);
+    const meetLink = `https://meet.google.com/${segment1}-${segment2}-${segment3}`;
     setLocation(meetLink);
   };
 
@@ -472,7 +477,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
             <div>
               <label className="block text-sm font-light text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-400" />
-                Lieu / Lien visio (optionnel)
+                Lieu / Lien visio
               </label>
               <div className="flex gap-2">
                 <input
