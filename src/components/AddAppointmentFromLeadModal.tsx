@@ -377,13 +377,13 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
                     </div>
 
                     {/* Créneaux disponibles - 40% */}
-                    <div className="flex-[4] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3 flex flex-col self-stretch">
+                    <div className="flex-[4] bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-3 flex flex-col">
                       {selectedDate ? (
                         <>
                           <h4 className="text-xs font-light text-gray-900 dark:text-gray-100 mb-2 flex-shrink-0">
                             Créneaux - {selectedDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
                           </h4>
-                          <div className="flex-1 overflow-y-auto space-y-1 pr-1">
+                          <div className="flex-1 overflow-y-auto space-y-1 pr-1 min-h-0">
                             {timeSlots.map((slot) => (
                               <button
                                 key={slot.time}
@@ -409,7 +409,7 @@ export default function AddAppointmentFromLeadModal({ onClose, lead }: AddAppoin
                           )}
                         </>
                       ) : (
-                        <div className="h-full flex items-center justify-center">
+                        <div className="flex items-center justify-center min-h-[200px]">
                           <p className="text-xs text-gray-500 dark:text-gray-400 font-light text-center">
                             Sélectionnez une date
                           </p>
